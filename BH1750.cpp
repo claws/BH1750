@@ -83,7 +83,7 @@ uint16_t BH1750::readLightLevel(void) {
         break;
       case BH1750_CONTINUOUS_LOW_RES_MODE: 
       case BH1750_ONE_TIME_LOW_RES_MODE:
-        level = level*4/1.2; // convert to lux
+        level = level/1.2; // convert to lux
         break;
   }
   
