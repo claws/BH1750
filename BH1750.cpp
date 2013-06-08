@@ -55,7 +55,7 @@ uint16_t BH1750::readLightLevel(void) {
   uint16_t level;
 
   Wire.beginTransmission(BH1750_I2CADDR);
-  Wire.requestFrom(BH1750_I2CADDR, 2);
+  Wire.requestFrom((uint8_t)BH1750_I2CADDR, (uint8_t)current_mode);
 #if (ARDUINO >= 100)
   level = Wire.read();
   level <<= 8;
