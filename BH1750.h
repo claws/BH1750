@@ -66,7 +66,7 @@ class BH1750 {
 
  private:
   void write8(uint8_t data);
-
+  uint8_t current_mode;
 };
 
 #endif
