@@ -38,6 +38,7 @@ void BH1750::configure(uint8_t mode) {
             // apply a valid mode change
             write8(mode);
             _delay_ms(10);
+            current_mode = mode;
             break;
         default:
             // Invalid measurement mode
@@ -54,7 +55,7 @@ uint16_t BH1750::readLightLevel(void) {
   uint16_t level;
 
   Wire.beginTransmission(BH1750_I2CADDR);
-  Wire.requestFrom(BH1750_I2CADDR, 2);
+  Wire.requestFrom((uint8_t)BH1750_I2CADDR, (uint8_t)current_mode);
 #if (ARDUINO >= 100)
   level = Wire.read();
   level <<= 8;
@@ -71,7 +72,21 @@ uint16_t BH1750::readLightLevel(void) {
   Serial.println(level);
 #endif
 
-  level = level/1.2; // convert to lux
+  switch (current_mode) {
+      case BH1750_CONTINUOUS_HIGH_RES_MODE:
+      case BH1750_ONE_TIME_HIGH_RES_MODE:
+        level = level/1.2; // convert to lux
+        break;
+      case BH1750_CONTINUOUS_HIGH_RES_MODE_2:
+      case BH1750_ONE_TIME_HIGH_RES_MODE_2:
+        level = level/2/1.2; // convert to lux
+        break;
+      case BH1750_CONTINUOUS_LOW_RES_MODE: 
+      case BH1750_ONE_TIME_LOW_RES_MODE:
+        level = level/1.2; // convert to lux
+        break;
+  }
+  
 
 #if BH1750_DEBUG == 1
   Serial.print("Light level: ");
