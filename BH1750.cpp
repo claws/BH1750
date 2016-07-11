@@ -12,7 +12,15 @@ Written by Christopher Laws, March, 2013.
 */
 
 #include "BH1750.h"
-#include <util/delay.h>
+
+#if defined(ESP8266)
+  #include <pgmspace.h>
+  #define _delay_ms(ms) delayMicroseconds((ms) * 1000)
+#endif
+
+#ifdef __avr__
+  #include <util/delay.h>
+#endif
 
 
 BH1750::BH1750() {
