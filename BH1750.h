@@ -1,15 +1,14 @@
 /*
 
-This is a library for the BH1750FVI Digital Light Sensor
-breakout board.
+  This is a library for the BH1750FVI Digital Light Sensor
+  breakout board.
 
-The board uses I2C for communication. 2 pins are required to
-interface to the device.
+  The board uses I2C for communication. 2 pins are required to
+  interface to the device.
 
-Datasheet:
-http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf
+  Datasheet: http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf
 
-Written by Christopher Laws, March, 2013.
+  Written by Christopher Laws, March, 2013.
 
 */
 
@@ -17,15 +16,15 @@ Written by Christopher Laws, March, 2013.
 #define BH1750_h
 
 #if (ARDUINO >= 100)
-#include <Arduino.h>
+  #include <Arduino.h>
 #else
-#include <WProgram.h>
+  #include <WProgram.h>
 #endif
+
 #include "Wire.h"
 
-#define BH1750_DEBUG 0
-
-#define BH1750_I2CADDR 0x23
+// Uncomment, to enable debug messages
+#define BH1750_DEBUG
 
 // No active state
 #define BH1750_POWER_DOWN 0x00
@@ -58,14 +57,15 @@ Written by Christopher Laws, March, 2013.
 #define BH1750_ONE_TIME_LOW_RES_MODE  0x23
 
 class BH1750 {
- public:
-  BH1750();
-  void begin(uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
-  void configure(uint8_t mode);
-  uint16_t readLightLevel(void);
 
- private:
-  void write8(uint8_t data);
+  public:
+    BH1750 (byte addr = 0x23);
+    void begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
+    void configure (uint8_t mode);
+    uint16_t readLightLevel(void);
+
+  private:
+    int BH1750_I2CADDR;
 
 };
 
