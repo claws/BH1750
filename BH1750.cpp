@@ -120,9 +120,6 @@ uint16_t BH1750::readLightLevel(void) {
   // Measurment result will be stored here
   uint16_t level;
 
-  // Start transmission to sensor
-  Wire.beginTransmission(BH1750_I2CADDR);
-
   // Read two bytes from sensor
   Wire.requestFrom(BH1750_I2CADDR, 2);
 
@@ -130,9 +127,6 @@ uint16_t BH1750::readLightLevel(void) {
   level = __wire_read();
   level <<= 8;
   level |= __wire_read();
-
-  // Say goodbye!
-  Wire.endTransmission();
 
   // Send raw value if debug enabled
   #ifdef BH1750_DEBUG
