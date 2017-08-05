@@ -60,6 +60,10 @@ class BH1750 {
 
   public:
     BH1750 (byte addr = 0x23);
+    #if defined(ARDUINO_ARCH_ESP8266)
+    /* ==== On esp8266 it is possible to define I2C pins ==== */
+    void begin (uint8_t SDA, uint8_t SCL, uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
+    #endif
     void begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
     void configure (uint8_t mode);
     uint16_t readLightLevel(void);

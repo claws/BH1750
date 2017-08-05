@@ -9,8 +9,8 @@
 
     VCC -> 5V (3V3 on Arduino Due, Zero, MKR1000, etc)
     GND -> GND
-    SCL -> SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due)
-    SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due)
+    SCL -> SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due on esp8266 free selectable)
+    SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due on esp8266 free selectable)
     ADD -> (not connected) or GND
 
   ADD pin uses to set sensor I2C address. If it has voltage greater or equal to
@@ -29,6 +29,7 @@ void setup(){
 
   Serial.begin(9600);
   lightMeter.begin();
+  //lightMeter.begin(begin(D4, D3)); //use this line on a esp8266
   Serial.println(F("BH1750 Test"));
 
 }

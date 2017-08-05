@@ -56,6 +56,20 @@ BH1750::BH1750(byte addr) {
 
 }
 
+/**
+ * Begin I2C and configure sensor
+ * @param SDA Date SCL Clock mode Measurment mode
+ */
+#if defined(ARDUINO_ARCH_ESP8266)
+void BH1750::begin(uint8_t SDA, uint8_t SCL, uint8_t mode) {
+
+  // allow config of pins
+  Wire.begin(SDA,SCL);
+
+  // Configure sensor in specified mode
+  configure(mode);
+}
+#endif
 
 /**
  * Begin I2C and configure sensor
