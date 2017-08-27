@@ -3,8 +3,9 @@
   This is a library for the BH1750FVI Digital Light Sensor
   breakout board.
 
-  The board uses I2C for communication. 2 pins are required to
-  interface to the device.
+  The BH1750 board uses I2C for communication. Two pins are required to
+  interface to the device. Configuring the I2C bus is expected to be done
+  in user code. The BH1750 library doesn't do this automatically.
 
   Datasheet: http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf
 
@@ -60,10 +61,6 @@ class BH1750 {
 
   public:
     BH1750 (byte addr = 0x23);
-    #if defined(ARDUINO_ARCH_ESP8266)
-    /* ==== On esp8266 it is possible to define I2C pins ==== */
-    void begin (uint8_t SDA, uint8_t SCL, uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
-    #endif
     void begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
     void configure (uint8_t mode);
     uint16_t readLightLevel(void);

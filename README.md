@@ -2,13 +2,18 @@
 
 [![Build Status](https://travis-ci.org/claws/BH1750.svg?branch=master)](https://travis-ci.org/claws/BH1750)<br>
 
-An Arduino library for digital light sensor breakout boards containing the BH1750FVI IC.
+An Arduino library for digital light sensor breakout boards containing the
+BH1750FVI IC.
 
-The board uses I2C for communication, and two pins are required to interface to the device.
+The BH1750 board uses I2C for communication, and two pins are required to
+interface to the device. Configuring the I2C bus is best done in user code
+(not library code) so that it can be done once and can more easily make use
+of various options for different platforms.
 
-Datasheet can be obtained [here](http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf)
 
-The BH1750 had six different measurment modes. They are divided in two groups;
+## Overview
+
+The BH1750 has six different measurment modes. They are divided in two groups;
 continuous and one-time measurments. In continuous mode, the sensor continuously
 measures lightness value. In one-time mode, sensor makes only one measurment, and
 then goes into Power Down mode after this.
@@ -38,6 +43,44 @@ ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
 0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
 be 0x23 (by default).
 
+The datasheet for the BH1750 can be obtained [here](http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf)
+
+
+## Example
+
+``` c++
+#include <Wire.h>
+#include <BH1750.h>
+
+BH1750 lightMeter;
+
+void setup(){
+
+  Serial.begin(9600);
+
+  // Initialize the I2C bus (BH1750 library doesn't do this automatically)
+  // On esp8266 devices you can select SCL and SDA pins using Wire.begin(D4, D3);
+  Wire.begin();
+
+  lightMeter.begin();
+  Serial.println(F("BH1750 Test"));
+
+}
+
+void loop() {
+
+  uint16_t lux = lightMeter.readLightLevel();
+  Serial.print("Light: ");
+  Serial.print(lux);
+  Serial.println(" lx");
+  delay(1000);
+
+}
+```
+
+There are more examples in the examples directory. One shows a simple use while
+the other shows a more advanced use case.
+
 
 ## Installation
 
@@ -52,9 +95,3 @@ Click "Clone or download" -> "Download ZIP" button.
     to `BH1750`. Restart IDE.
 
 Additional info, about library installation process - https://www.arduino.cc/en/Guide/Libraries
-
-
-## Examples
-
-There are two examples in the examples directory. One shows a simple use while
-the other shows a more advanced use case.

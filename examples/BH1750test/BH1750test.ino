@@ -28,8 +28,13 @@ BH1750 lightMeter;
 void setup(){
 
   Serial.begin(9600);
+
+  // Initialize the I2C bus (BH1750 library doesn't do this automatically)
+  Wire.begin();
+  // On esp8266 you can select SCL and SDA pins using Wire.begin(D4, D3);
+
   lightMeter.begin();
-  //lightMeter.begin(begin(D4, D3)); // use this line on a esp8266 to modify pins
+
   Serial.println(F("BH1750 Test"));
 
 }
