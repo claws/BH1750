@@ -12,9 +12,9 @@
     SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due)
     ADD -> GND or VCC (see below)
 
-  ADD pin uses to set sensor I2C address. If it has voltage greater or equal to
-  0.7VCC voltage (as example, you've connected it to VCC) - sensor address will be
-  0x5C. In other case (if ADD voltage less than 0.7 * VCC) - sensor address will
+  ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
+  0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
+  0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
   be 0x23 (by default).
 
 */
