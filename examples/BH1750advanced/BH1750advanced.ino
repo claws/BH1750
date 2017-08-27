@@ -38,9 +38,13 @@ void setup(){
 
   Serial.begin(9600);
 
+  // Initialize the I2C bus (BH1750 library doesn't do this automatically)
+  Wire.begin();
+  // On esp8266 you can select SCL and SDA pins using Wire.begin(D4, D3);
+
   /*
 
-    BH1750 had six different measurment modes. They are divided in two groups -
+    BH1750 has six different measurment modes. They are divided in two groups -
     continuous and one-time measurments. In continuous mode, sensor continuously
     measures lightness value. And in one-time mode, sensor makes only one
     measurment, and going to Power Down mode after this.

@@ -3,8 +3,9 @@
   This is a library for the BH1750FVI Digital Light Sensor
   breakout board.
 
-  The board uses I2C for communication. 2 pins are required to
-  interface to the device.
+  The BH1750 board uses I2C for communication. Two pins are required to
+  interface to the device. Configuring the I2C bus is expected to be done
+  in user code. The BH1750 library doesn't do this automatically.
 
   Written by Christopher Laws, March, 2013.
 
@@ -58,30 +59,12 @@ BH1750::BH1750(byte addr) {
 
 
 /**
- * Begin I2C and configure sensor
- * @param SDA Date SCL Clock mode Measurment mode
- */
-#if defined(ARDUINO_ARCH_ESP8266)
-void BH1750::begin(uint8_t SDA, uint8_t SCL, uint8_t mode) {
-
-  // allow config of pins
-  Wire.begin(SDA, SCL);
-
-  // Configure sensor in specified mode
-  configure(mode);
-
-}
-#endif
-
-
-/**
- * Begin I2C and configure sensor
+ * Configure sensor
  * @param mode Measurment mode
  */
 void BH1750::begin(uint8_t mode) {
 
-  // Initialize I2C
-  Wire.begin();
+  // I2C is expected to be initialized outside this library
 
   // Configure sensor in specified mode
   configure(mode);
@@ -94,7 +77,6 @@ void BH1750::begin(uint8_t mode) {
  * @param mode Measurment mode
  */
 void BH1750::configure(uint8_t mode) {
-
 
   // Check measurment mode is valid
   switch (mode) {
