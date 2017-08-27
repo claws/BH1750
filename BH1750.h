@@ -70,6 +70,7 @@ class BH1750 {
 
   private:
     int BH1750_I2CADDR;
+    uint8_t BH1750_MODE;
 
 };
 

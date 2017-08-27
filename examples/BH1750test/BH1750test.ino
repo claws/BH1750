@@ -13,9 +13,9 @@
     SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due on esp8266 free selectable)
     ADD -> (not connected) or GND
 
-  ADD pin uses to set sensor I2C address. If it has voltage greater or equal to
-  0.7VCC voltage (as example, you've connected it to VCC) - sensor address will be
-  0x5C. In other case (if ADD voltage less than 0.7 * VCC) - sensor address will
+  ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
+  0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
+  0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
   be 0x23 (by default).
 
 */
@@ -29,7 +29,7 @@ void setup(){
 
   Serial.begin(9600);
   lightMeter.begin();
-  //lightMeter.begin(begin(D4, D3)); //use this line on a esp8266
+  //lightMeter.begin(begin(D4, D3)); // use this line on a esp8266 to modify pins
   Serial.println(F("BH1750 Test"));
 
 }
