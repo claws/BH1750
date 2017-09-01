@@ -130,6 +130,19 @@ uint16_t BH1750::readLightLevel(void) {
     case BH1750_ONE_TIME_HIGH_RES_MODE_2:
     case BH1750_ONE_TIME_LOW_RES_MODE:
       __wire_write((uint8_t)BH1750_MODE);
+			if (BH1750_MODE >= 0x20) {
+				configure(BH1750_MODE);
+				if (BH1750_MODE == BH1750_ONE_TIME_LOW_RES_MODE)
+				{
+				  //_delay_ms(16); //typical value
+				  _delay_ms(24); //max value
+				}
+				else
+				{
+				  //_delay_ms(120); //typical value
+				  _delay_ms(180); //max value
+				}
+			}
       break;
   }
 
