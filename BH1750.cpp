@@ -3,8 +3,9 @@
   This is a library for the BH1750FVI Digital Light Sensor
   breakout board.
 
-  The board uses I2C for communication. 2 pins are required to
-  interface to the device.
+  The BH1750 board uses I2C for communication. Two pins are required to
+  interface to the device. Configuring the I2C bus is expected to be done
+  in user code. The BH1750 library doesn't do this automatically.
 
   Written by Christopher Laws, March, 2013.
 
@@ -58,13 +59,12 @@ BH1750::BH1750(byte addr) {
 
 
 /**
- * Begin I2C and configure sensor
+ * Configure sensor
  * @param mode Measurment mode
  */
 void BH1750::begin(uint8_t mode) {
 
-  // Initialize I2C
-  Wire.begin();
+  // I2C is expected to be initialized outside this library
 
   // Configure sensor in specified mode
   configure(mode);
@@ -73,12 +73,12 @@ void BH1750::begin(uint8_t mode) {
 
 
 /**
- * Configurate BH1750 with specified working mode
+ * Configure BH1750 with specified working mode
  * @param mode Measurment mode
  */
 void BH1750::configure(uint8_t mode) {
 
-  // Check, is measurment mode exist
+  // Check measurment mode is valid
   switch (mode) {
 
     case BH1750_CONTINUOUS_HIGH_RES_MODE:
@@ -88,12 +88,15 @@ void BH1750::configure(uint8_t mode) {
     case BH1750_ONE_TIME_HIGH_RES_MODE_2:
     case BH1750_ONE_TIME_LOW_RES_MODE:
 
+      // Save mode so it can be restored when One-Time modes are used.
+      BH1750_MODE = mode;
+
       // Send mode to sensor
       Wire.beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)mode);
+      __wire_write((uint8_t)BH1750_MODE);
       Wire.endTransmission();
 
-      // Wait few moments for waking up
+      // Wait a few moments to wake up
       _delay_ms(10);
       break;
 
@@ -113,12 +116,22 @@ void BH1750::configure(uint8_t mode) {
 
 /**
  * Read light level from sensor
- * @return  Lightness in lux (0 ~ 65535)
+ * @return Light level in lux (0 ~ 65535)
  */
 uint16_t BH1750::readLightLevel(void) {
 
   // Measurment result will be stored here
   uint16_t level;
+
+  // One-Time modes apparently need to be re-applied after power-up
+  // to ensure the chip is awake.
+  switch (BH1750_MODE) {
+    case BH1750_ONE_TIME_HIGH_RES_MODE:
+    case BH1750_ONE_TIME_HIGH_RES_MODE_2:
+    case BH1750_ONE_TIME_LOW_RES_MODE:
+      __wire_write((uint8_t)BH1750_MODE);
+      break;
+  }
 
   // Read two bytes from sensor
   Wire.requestFrom(BH1750_I2CADDR, 2);
@@ -128,7 +141,7 @@ uint16_t BH1750::readLightLevel(void) {
   level <<= 8;
   level |= __wire_read();
 
-  // Send raw value if debug enabled
+  // Print raw value if debug enabled
   #ifdef BH1750_DEBUG
     Serial.print(F("[BH1750] Raw value: "));
     Serial.println(level);
@@ -137,7 +150,7 @@ uint16_t BH1750::readLightLevel(void) {
   // Convert raw value to lux
   level /= 1.2;
 
-  // Send converted value, if debug enabled
+  // Print converted value if debug enabled
   #ifdef BH1750_DEBUG
     Serial.print(F("[BH1750] Converted value: "));
     Serial.println(level);

@@ -12,9 +12,9 @@
     SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due)
     ADD -> GND or VCC (see below)
 
-  ADD pin uses to set sensor I2C address. If it has voltage greater or equal to
-  0.7VCC voltage (as example, you've connected it to VCC) - sensor address will be
-  0x5C. In other case (if ADD voltage less than 0.7 * VCC) - sensor address will
+  ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
+  0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
+  0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
   be 0x23 (by default).
 
 */
@@ -38,9 +38,13 @@ void setup(){
 
   Serial.begin(9600);
 
+  // Initialize the I2C bus (BH1750 library doesn't do this automatically)
+  Wire.begin();
+  // On esp8266 you can select SCL and SDA pins using Wire.begin(D4, D3);
+
   /*
 
-    BH1750 had six different measurment modes. They are divided in two groups -
+    BH1750 has six different measurment modes. They are divided in two groups -
     continuous and one-time measurments. In continuous mode, sensor continuously
     measures lightness value. And in one-time mode, sensor makes only one
     measurment, and going to Power Down mode after this.
