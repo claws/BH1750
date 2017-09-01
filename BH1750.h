@@ -63,7 +63,7 @@ class BH1750 {
     BH1750 (byte addr = 0x23);
     void begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
     void configure (uint8_t mode);
-    uint16_t readLightLevel(void);
+    uint16_t readLightLevel(bool saveWait = true);
 
   private:
     int BH1750_I2CADDR;
