@@ -118,7 +118,7 @@ void BH1750::configure(uint8_t mode) {
  * Read light level from sensor
  * @return Light level in lux (0 ~ 65535)
  */
-uint16_t BH1750::readLightLevel(void) {
+uint16_t BH1750::readLightLevel(bool saveWait) {
 
   // Measurment result will be stored here
   uint16_t level;
@@ -130,6 +130,14 @@ uint16_t BH1750::readLightLevel(void) {
     case BH1750_ONE_TIME_HIGH_RES_MODE_2:
     case BH1750_ONE_TIME_LOW_RES_MODE:
       __wire_write((uint8_t)BH1750_MODE);
+      if (BH1750_MODE == BH1750_ONE_TIME_LOW_RES_MODE)
+      {
+        saveWait ? _delay_ms(24) : _delay_ms(16); //max value : typical value
+      }
+      else
+      {
+        saveWait ? _delay_ms(180) :_delay_ms(120); //max value : typical value
+      } 
       break;
   }
 
