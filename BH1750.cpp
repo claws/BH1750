@@ -61,12 +61,12 @@ BH1750::BH1750(byte addr) {
  * Configure sensor
  * @param mode Measurment mode
  */
-void BH1750::begin(uint8_t mode) {
+bool BH1750::begin(uint8_t mode) {
 
   // I2C is expected to be initialized outside this library
 
   // Configure sensor in specified mode
-  configure(mode);
+   return configure(mode);
 
 }
 
@@ -75,8 +75,8 @@ void BH1750::begin(uint8_t mode) {
  * Configure BH1750 with specified working mode
  * @param mode Measurment mode
  */
-void BH1750::configure(uint8_t mode) {
-
+bool BH1750::configure(uint8_t mode) {
+  byte ack = false;
   // Check measurment mode is valid
   switch (mode) {
 
@@ -93,7 +93,7 @@ void BH1750::configure(uint8_t mode) {
       // Send mode to sensor
       Wire.beginTransmission(BH1750_I2CADDR);
       __wire_write((uint8_t)BH1750_MODE);
-      Wire.endTransmission();
+      ack = Wire.endTransmission();
 
       // Wait a few moments to wake up
       _delay_ms(10);
@@ -107,6 +107,15 @@ void BH1750::configure(uint8_t mode) {
       #endif
 
       break;
+    switch (ack) {
+        case 0: BH1750_MODE = mode; return true;
+        case 1: //too long for transmit buffer
+        case 2: //received NACK on transmit of address
+        case 3: //received NACK on transmit of data
+        case 4: //other error
+        default: break;
+      }
+  return false;
 
   }
 
@@ -153,10 +162,12 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
   // Read two bytes from sensor
   Wire.requestFrom(BH1750_I2CADDR, 2);
 
+  if (Wire.available() == 2 ) {
   // Read two bytes, which are low and high parts of sensor value
-  level = __wire_read();
-  level <<= 8;
-  level |= __wire_read();
+    level = __wire_read();
+    level <<= 8;
+    level |= __wire_read();
+  }
 
   // Print raw value if debug enabled
   #ifdef BH1750_DEBUG
