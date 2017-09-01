@@ -61,8 +61,8 @@ class BH1750 {
 
   public:
     BH1750 (byte addr = 0x23);
-    void begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
-    void configure (uint8_t mode);
+    bool begin (uint8_t mode = BH1750_CONTINUOUS_HIGH_RES_MODE);
+    bool configure (uint8_t mode);
     uint16_t readLightLevel(bool saveWait = true);
 
   private:
