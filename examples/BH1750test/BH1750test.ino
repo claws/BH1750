@@ -2,8 +2,8 @@
 
   Example of BH1750 library usage.
 
-  This example initalises the BH1750 object using the default
-  high resolution mode and then makes a light level reading every second.
+  This example initalises the BH1750 object using the default high resolution
+  continuous mode and then makes a light level reading every second.
 
   Connection:
 

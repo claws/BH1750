@@ -1,7 +1,6 @@
 /*
 
-  This is a library for the BH1750FVI Digital Light Sensor
-  breakout board.
+  This is a library for the BH1750FVI Digital Light Sensor breakout board.
 
   The BH1750 board uses I2C for communication. Two pins are required to
   interface to the device. Configuring the I2C bus is expected to be done
@@ -118,19 +117,37 @@ void BH1750::configure(uint8_t mode) {
  * Read light level from sensor
  * @return Light level in lux (0 ~ 65535)
  */
-uint16_t BH1750::readLightLevel(void) {
+uint16_t BH1750::readLightLevel(bool maxWait) {
 
   // Measurment result will be stored here
   uint16_t level;
 
-  // One-Time modes apparently need to be re-applied after power-up
-  // to ensure the chip is awake.
+  // One-Time modes need to be re-applied after power-up. They have a maximum
+  // measurement time and a typical measurement time. The maxWait argument
+  // determines which measurement wait time is used when a one-time mode is
+  // being used. The typical (shorter) measurement time is used by default and
+  // if maxWait is set to True then the maximum measurement time will be used.
+  // See data sheet pages 2, 5 and 7 for more details.
   switch (BH1750_MODE) {
+
     case BH1750_ONE_TIME_HIGH_RES_MODE:
     case BH1750_ONE_TIME_HIGH_RES_MODE_2:
     case BH1750_ONE_TIME_LOW_RES_MODE:
+
+      // Send mode to sensor
+      Wire.beginTransmission(BH1750_I2CADDR);
       __wire_write((uint8_t)BH1750_MODE);
+      Wire.endTransmission();
+
+      // wait for measurement time
+      if (BH1750_MODE == BH1750_ONE_TIME_LOW_RES_MODE) {
+        maxWait ? _delay_ms(24) : _delay_ms(16);
+      }
+      else {
+        maxWait ? _delay_ms(180) :_delay_ms(120);
+      }
       break;
+
   }
 
   // Read two bytes from sensor

@@ -25,10 +25,10 @@ Each mode, has three different precisions:
   - High Resolution Mode 2 - (0.5 lx precision, 120ms measurment time)
 
 By default, this library uses Continuous High Resolution Mode, but you can set
-any other mode by definepassing the mode argument to BH1750.begin().
+any other mode by passing the mode argument to BH1750.begin().
 
-Remember, if you use One-Time mode, your sensor will go to Power Down mode
-each time, when it completes measurment and you've read it.
+Remember, if you use One-Time mode, your sensor will go into Power Down mode
+when it completes the measurment and you've read it.
 
 Typical Connection:
 
@@ -43,8 +43,7 @@ ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
 0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
 be 0x23 (by default).
 
-The datasheet for the BH1750 can be obtained [here](http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf)
-
+The datasheet for the BH1750 can be obtained [here](http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf)
 
 ## Example
 
