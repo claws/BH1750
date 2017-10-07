@@ -2,15 +2,15 @@
 
   Advanced BH1750 library usage example
 
-  This example had some comments about advanced usage features.
+  This example has some comments about advanced usage features.
 
   Connection:
 
-    VCC -> 5V (3V3 on Arduino Due, Zero, MKR1000, etc)
+    VCC -> 3V3 or 5V
     GND -> GND
-    SCL -> SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due)
-    SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due)
-    ADD -> GND or VCC (see below)
+    SCL -> SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due, on esp8266 free selectable)
+    SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due, on esp8266 free selectable)
+    ADD -> (not connected) or GND
 
   ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
   0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
@@ -46,8 +46,8 @@ void setup(){
 
     BH1750 has six different measurment modes. They are divided in two groups -
     continuous and one-time measurments. In continuous mode, sensor continuously
-    measures lightness value. And in one-time mode, sensor makes only one
-    measurment, and going to Power Down mode after this.
+    measures lightness value. In one-time mode the sensor makes only one
+    measurment and then goes into Power Down mode.
 
     Each mode, has three different precisions:
 
@@ -55,11 +55,12 @@ void setup(){
       - High Resolution Mode - (1 lx precision, 120ms measurment time)
       - High Resolution Mode 2 - (0.5 lx precision, 120ms measurment time)
 
-    By default, library use Continuous High Resolution Mode, but you can set
-    any other mode, by define it to BH1750.begin() or BH1750.configure() functions.
+    By default, the library uses Continuous High Resolution Mode, but you can
+    set any other mode, by passing it to BH1750.begin() or BH1750.configure()
+    functions.
 
-    [!] Remember, if you use One-Time mode, your sensor will go to Power Down mode
-    each time, when it completes measurment and you've read it.
+    [!] Remember, if you use One-Time mode, your sensor will go to Power Down
+    mode each time, when it completes measurment and you've read it.
 
     Full mode list:
 
