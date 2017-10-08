@@ -87,9 +87,6 @@ bool BH1750::configure(uint8_t mode) {
     case BH1750_ONE_TIME_HIGH_RES_MODE_2:
     case BH1750_ONE_TIME_LOW_RES_MODE:
 
-      // Save mode so it can be restored when One-Time modes are used.
-      BH1750_MODE = mode;
-
       // Send mode to sensor
       Wire.beginTransmission(BH1750_I2CADDR);
       __wire_write((uint8_t)BH1750_MODE);
