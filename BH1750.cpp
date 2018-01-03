@@ -147,7 +147,7 @@ bool BH1750::configure(uint8_t mode) {
 uint16_t BH1750::readLightLevel(bool maxWait) {
 
   // Measurment result will be stored here
-  uint16_t level;
+  uint16_t level(NAN);
 
   // One-Time modes need to be re-applied after power-up. They have a maximum
   // measurement time and a typical measurement time. The maxWait argument
@@ -155,16 +155,17 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
   // being used. The typical (shorter) measurement time is used by default and
   // if maxWait is set to True then the maximum measurement time will be used.
   // See data sheet pages 2, 5 and 7 for more details.
+
+  // Send mode to sensor
+  Wire.beginTransmission(BH1750_I2CADDR);
+  __wire_write((uint8_t)BH1750_MODE);
+  Wire.endTransmission();
+
   switch (BH1750_MODE) {
 
     case BH1750_ONE_TIME_HIGH_RES_MODE:
     case BH1750_ONE_TIME_HIGH_RES_MODE_2:
     case BH1750_ONE_TIME_LOW_RES_MODE:
-
-      // Send mode to sensor
-      Wire.beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)BH1750_MODE);
-      Wire.endTransmission();
 
       // wait for measurement time
       if (BH1750_MODE == BH1750_ONE_TIME_LOW_RES_MODE) {
