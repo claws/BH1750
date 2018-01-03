@@ -66,7 +66,7 @@ bool BH1750::begin(uint8_t mode) {
   // I2C is expected to be initialized outside this library
 
   // Configure sensor in specified mode
-   return configure(mode);
+  return configure(mode);
 
 }
 
@@ -76,7 +76,10 @@ bool BH1750::begin(uint8_t mode) {
  * @param mode Measurment mode
  */
 bool BH1750::configure(uint8_t mode) {
+  
+  // default transmission result to a value out of normal range
   byte ack = 5;
+  
   // Check measurment mode is valid
   switch (mode) {
 
@@ -100,20 +103,40 @@ bool BH1750::configure(uint8_t mode) {
 
       // Invalid measurement mode
       #ifdef BH1750_DEBUG
-        Serial.println(F("BH1750: Invalid measurment mode"));
+      Serial.println(F("BH1750: Invalid measurment mode"));
       #endif
 
       break;
+
   }
+
+  // Check result code
   switch (ack) {
-      case 0: BH1750_MODE = mode; return true;
-      case 1: //too long for transmit buffer
-      case 2: //received NACK on transmit of address
-      case 3: //received NACK on transmit of data
-      case 4: //other error
-      default: break;
+    case 0: 
+      BH1750_MODE = mode; 
+      return true;
+    case 1: //too long for transmit buffer
+      #ifdef BH1750_DEBUG
+      Serial.println(F("too long for transmit buffer"));
+      #endif
+    case 2: //received NACK on transmit of address
+      #ifdef BH1750_DEBUG
+      Serial.println(F("received NACK on transmit of address"));
+      #endif
+    case 3: //received NACK on transmit of data
+      #ifdef BH1750_DEBUG
+      Serial.println(F("received NACK on transmit of data"));
+      #endif
+    case 4: //other error
+      #ifdef BH1750_DEBUG
+      Serial.println(F("other error"));
+      #endif
+    default: 
+      break;
   }
+
   return false;
+
 }
 
 
@@ -158,7 +181,7 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
   // Read two bytes from sensor
   Wire.requestFrom(BH1750_I2CADDR, 2);
 
-  if ( Wire.available() == 2 ) {
+  if (Wire.available() == 2) {
   // Read two bytes, which are low and high parts of sensor value
     level = __wire_read();
     level <<= 8;
@@ -167,8 +190,8 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
 
   // Print raw value if debug enabled
   #ifdef BH1750_DEBUG
-    Serial.print(F("[BH1750] Raw value: "));
-    Serial.println(level);
+  Serial.print(F("[BH1750] Raw value: "));
+  Serial.println(level);
   #endif
 
   // Convert raw value to lux
@@ -176,8 +199,8 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
 
   // Print converted value if debug enabled
   #ifdef BH1750_DEBUG
-    Serial.print(F("[BH1750] Converted value: "));
-    Serial.println(level);
+  Serial.print(F("[BH1750] Converted value: "));
+  Serial.println(level);
   #endif
 
   return level;
