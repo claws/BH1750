@@ -35,7 +35,7 @@ void setup(){
 
   lightMeter.begin();
 
-  Serial.println(F("BH1750 Test"));
+  Serial.println(F("BH1750 Test begin"));
 
 }
 
