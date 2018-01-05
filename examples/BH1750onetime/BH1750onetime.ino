@@ -2,7 +2,7 @@
 
   Example of BH1750 library usage.
 
-  This example initalises the BH1750 object using the high resolution
+  This example initialises the BH1750 object using the high resolution
   one-time mode and then makes a light level reading every second.
 
   The BH1750 component starts up in default mode when it next powers up.
