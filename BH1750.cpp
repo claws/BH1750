@@ -53,7 +53,6 @@
 BH1750::BH1750(byte addr) {
 
   BH1750_I2CADDR = addr;
-  BH1750_CONFIGURED = false;
 
 }
 
@@ -62,7 +61,7 @@ BH1750::BH1750(byte addr) {
  * Configure sensor
  * @param mode Measurement mode
  */
-bool BH1750::begin(uint8_t mode) {
+bool BH1750::begin(Mode mode) {
 
   // I2C is expected to be initialized outside this library
 
@@ -76,9 +75,7 @@ bool BH1750::begin(uint8_t mode) {
  * Configure BH1750 with specified mode
  * @param mode Measurement mode
  */
-bool BH1750::configure(uint8_t mode) {
-
-  BH1750_CONFIGURED = false;
+bool BH1750::configure(Mode mode) {
 
   // default transmission result to a value out of normal range
   byte ack = 5;
@@ -86,12 +83,12 @@ bool BH1750::configure(uint8_t mode) {
   // Check measurement mode is valid
   switch (mode) {
 
-    case BH1750_CONTINUOUS_HIGH_RES_MODE:
-    case BH1750_CONTINUOUS_HIGH_RES_MODE_2:
-    case BH1750_CONTINUOUS_LOW_RES_MODE:
-    case BH1750_ONE_TIME_HIGH_RES_MODE:
-    case BH1750_ONE_TIME_HIGH_RES_MODE_2:
-    case BH1750_ONE_TIME_LOW_RES_MODE:
+    case BH1750::CONTINUOUS_HIGH_RES_MODE:
+    case BH1750::CONTINUOUS_HIGH_RES_MODE_2:
+    case BH1750::CONTINUOUS_LOW_RES_MODE:
+    case BH1750::ONE_TIME_HIGH_RES_MODE:
+    case BH1750::ONE_TIME_HIGH_RES_MODE_2:
+    case BH1750::ONE_TIME_LOW_RES_MODE:
 
       // Send mode to sensor
       Wire.beginTransmission(BH1750_I2CADDR);
@@ -106,7 +103,7 @@ bool BH1750::configure(uint8_t mode) {
 
       // Invalid measurement mode
       #ifdef BH1750_DEBUG
-      Serial.println(F("[BH1750] ERROR: Invalid measurement mode"));
+      Serial.println(F("[BH1750] ERROR: Invalid BH1750 mode"));
       #endif
 
       break;
@@ -117,7 +114,7 @@ bool BH1750::configure(uint8_t mode) {
   switch (ack) {
     case 0:
       BH1750_MODE = mode;
-      BH1750_CONFIGURED = true;
+      return true;
     case 1: // too long for transmit buffer
       #ifdef BH1750_DEBUG
       Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
@@ -138,7 +135,7 @@ bool BH1750::configure(uint8_t mode) {
       break;
   }
 
-  return BH1750_CONFIGURED;
+  return false;
 
 }
 
@@ -149,13 +146,13 @@ bool BH1750::configure(uint8_t mode) {
  */
 uint16_t BH1750::readLightLevel(bool maxWait) {
 
-  if (!BH1750_CONFIGURED) {
+  if (BH1750_MODE == UNCONFIGURED) {
     Serial.println(F("[BH1750] Device is not configured!"));
     return 0;
   }
 
   // Measurement result will be stored here
-  uint16_t level;
+  uint16_t level(NAN);
 
   // Send mode to sensor
   Wire.beginTransmission(BH1750_I2CADDR);
@@ -169,20 +166,22 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
   // measurement time is used by default and if maxWait is set to True then
   // the maximum measurement time will be used. See data sheet pages 2, 5
   // and 7 for more details.
+  // A continuous mode measurement can be read immediately after re-sending
+  // the mode command.
+
   switch (BH1750_MODE) {
 
-    case BH1750_CONTINUOUS_LOW_RES_MODE:
-    case BH1750_ONE_TIME_LOW_RES_MODE:
-      maxWait ? _delay_ms(24) : _delay_ms(16);
-      break;
+    case BH1750::ONE_TIME_LOW_RES_MODE:
+    case BH1750::ONE_TIME_HIGH_RES_MODE:
+    case BH1750::ONE_TIME_HIGH_RES_MODE_2:
 
-    case BH1750_CONTINUOUS_HIGH_RES_MODE:
-    case BH1750_CONTINUOUS_HIGH_RES_MODE_2:
-    case BH1750_ONE_TIME_HIGH_RES_MODE:
-    case BH1750_ONE_TIME_HIGH_RES_MODE_2:
-      maxWait ? _delay_ms(180) :_delay_ms(120);
+      if (BH1750_MODE == BH1750::ONE_TIME_LOW_RES_MODE) {
+        maxWait ? _delay_ms(24) : _delay_ms(16);
+      }
+      else {
+        maxWait ? _delay_ms(180) :_delay_ms(120);
+      }
       break;
-
   }
 
   // Read two bytes from the sensor, which are low and high parts of the sensor

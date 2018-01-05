@@ -75,7 +75,7 @@ void setup(){
   */
 
   // begin returns a boolean that can be used to detect setup problems.
-  if (lightMeter.begin(BH1750_CONTINUOUS_HIGH_RES_MODE)) {
+  if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE)) {
     Serial.println(F("BH1750 Advanced begin"));
   }
   else {
