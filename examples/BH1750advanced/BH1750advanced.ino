@@ -28,7 +28,7 @@
     - 0x23 (most common) (if ADD pin had < 0.7VCC voltage)
     - 0x5C (if ADD pin had > 0.7VCC voltage)
 
-  Library use 0x23 address as default, but you can define any other address.
+  Library uses 0x23 address as default, but you can define any other address.
   If you had troubles with default value - try to change it to 0x5C.
 
 */
