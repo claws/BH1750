@@ -100,12 +100,8 @@ bool BH1750::configure(Mode mode) {
       break;
 
     default:
-
       // Invalid measurement mode
-      #ifdef BH1750_DEBUG
-      Serial.println(F("[BH1750] ERROR: Invalid BH1750 mode"));
-      #endif
-
+      Serial.println(F("[BH1750] ERROR: Invalid mode"));
       break;
 
   }
@@ -116,22 +112,15 @@ bool BH1750::configure(Mode mode) {
       BH1750_MODE = mode;
       return true;
     case 1: // too long for transmit buffer
-      #ifdef BH1750_DEBUG
       Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
-      #endif
     case 2: // received NACK on transmit of address
-      #ifdef BH1750_DEBUG
       Serial.println(F("[BH1750] ERROR: received NACK on transmit of address"));
-      #endif
     case 3: // received NACK on transmit of data
-      #ifdef BH1750_DEBUG
       Serial.println(F("[BH1750] ERROR: received NACK on transmit of data"));
-      #endif
     case 4: // other error
-      #ifdef BH1750_DEBUG
       Serial.println(F("[BH1750] ERROR: other error"));
-      #endif
     default:
+      Serial.println(F("[BH1750] ERROR: undefined error"));
       break;
   }
 
