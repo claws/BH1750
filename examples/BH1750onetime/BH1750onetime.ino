@@ -2,7 +2,7 @@
 
   Example of BH1750 library usage.
 
-  This example initalises the BH1750 object using the high resolution
+  This example initialises the BH1750 object using the high resolution
   one-time mode and then makes a light level reading every second.
 
   The BH1750 component starts up in default mode when it next powers up.
@@ -24,7 +24,7 @@ void setup(){
   Wire.begin();
   // On esp8266 you can select SCL and SDA pins using Wire.begin(D4, D3);
 
-  lightMeter.begin(BH1750_ONE_TIME_HIGH_RES_MODE);
+  lightMeter.begin(BH1750::ONE_TIME_HIGH_RES_MODE);
 
   Serial.println(F("BH1750 One-Time Test"));
 

@@ -2,7 +2,7 @@
 
   Example of BH1750 library usage.
 
-  This example initalises the BH1750 object using the default high resolution
+  This example initialises the BH1750 object using the default high resolution
   continuous mode and then makes a light level reading every second.
 
   Connection:
@@ -25,6 +25,7 @@
 
 BH1750 lightMeter;
 
+
 void setup(){
 
   Serial.begin(9600);
@@ -35,7 +36,7 @@ void setup(){
 
   lightMeter.begin();
 
-  Serial.println(F("BH1750 Test"));
+  Serial.println(F("BH1750 Test begin"));
 
 }
 

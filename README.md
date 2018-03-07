@@ -17,23 +17,23 @@ A common module containing the BH1750 component is the GY-30 shown below.
 
 ## Overview
 
-The BH1750 has six different measurment modes which are divided in two groups;
-continuous and one-time measurments. In continuous mode the sensor
+The BH1750 has six different measurement modes which are divided in two groups;
+continuous and one-time measurements. In continuous mode the sensor
 continuously measures lightness value. In one-time mode, the sensor makes only
-one measurment and then goes into Power Down mode.
+one measurement and then goes into Power Down mode.
 
 Each mode has three different precisions:
 
-  - Low Resolution Mode - (4 lx precision, 16ms measurment time)
-  - High Resolution Mode - (1 lx precision, 120ms measurment time)
-  - High Resolution Mode 2 - (0.5 lx precision, 120ms measurment time)
+  - Low Resolution Mode - (4 lx precision, 16ms measurement time)
+  - High Resolution Mode - (1 lx precision, 120ms measurement time)
+  - High Resolution Mode 2 - (0.5 lx precision, 120ms measurement time)
 
 By default, this library uses Continuous High Resolution Mode, but you can
 change this to a different mode by passing the mode argument to
 BH1750.begin().
 
 When the One-Time mode is used your sensor will go into Power Down mode when
-it completes the measurment and you've read it. When the sensor is powered up
+it completes the measurement and you've read it. When the sensor is powered up
 again it returns to the default mode which means it needs to be reconfigured
 back into One-Time mode. This library has been implemented to automatically
 reconfigure the sensor when you next attempt a measurement so you should not
