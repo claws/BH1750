@@ -39,6 +39,17 @@ back into One-Time mode. This library has been implemented to automatically
 reconfigure the sensor when you next attempt a measurement so you should not
 have to worry about such low level details.
 
+Usually you will get a float value which represent the lux equivalent.
+  - Low Resolution Mode - (0.0 up to 54612.5 lux)
+  - High Resolution Mode - (0.0 up to 54612.5 lux)
+  - High Resolution Mode 2 - (0.0 up to 27306.25 lux)
+
+The sensor returns a 16 bit unsigned integer. Therefore the maximum value is limited in general. 
+The standard conversion between the so called 'counts' to lux is 1/1.2, that means you get a smaller value.
+If a error occurs you will get a negative value.
+  - -1 no valid data was transmitted from the sensor
+  - -2 device is not configured
+
 The datasheet for the BH1750 chip can be obtained [here](http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf)
 
 
@@ -117,7 +128,7 @@ void setup(){
 
 void loop() {
 
-  uint16_t lux = lightMeter.readLightLevel();
+  float lux = lightMeter.readLightLevel();
   Serial.print("Light: ");
   Serial.print(lux);
   Serial.println(" lx");
@@ -131,12 +142,12 @@ void loop() {
 Moving the sensor to face more light results in the lux measurements increasing.
 ```
 BH1750 Test
-Light: 70 lx
-Light: 70 lx
-Light: 59 lx
-Light: 328 lx
-Light: 333 lx
-Light: 335 lx
-Light: 332 lx
+Light: 70.0 lx
+Light: 70.0 lx
+Light: 59.0 lx
+Light: 328.0 lx
+Light: 333.0 lx
+Light: 335.0 lx
+Light: 332.0 lx
 ```
 There are more examples in the examples directory.
