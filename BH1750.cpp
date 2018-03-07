@@ -131,17 +131,19 @@ bool BH1750::configure(Mode mode) {
 
 /**
  * Read light level from sensor
- * @return Light level in lux (0 ~ 65535)
+ * @return Light level in lux (0.0 ~ 54612,5)
+ * 	   -1 : no valid return value
+ * 	   -2 : sensor not configured
  */
-uint16_t BH1750::readLightLevel(bool maxWait) {
+float BH1750::readLightLevel(bool maxWait) {
 
   if (BH1750_MODE == UNCONFIGURED) {
     Serial.println(F("[BH1750] Device is not configured!"));
-    return 0;
+    return -2;
   }
 
   // Measurement result will be stored here
-  uint16_t level=65535;
+  float level = -1;
 
   // Send mode to sensor
   Wire.beginTransmission(BH1750_I2CADDR);
@@ -176,19 +178,26 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
 
   // Read two bytes from the sensor, which are low and high parts of the sensor
   // value
-  Wire.requestFrom(BH1750_I2CADDR, 2);
-  if (Wire.available() == 2) {
-    level = __wire_read();
-    level <<= 8;
-    level |= __wire_read();
+  if (2 == Wire.requestFrom(BH1750_I2CADDR, 2)) {
+    uint16_t tmp = 0;
+  //if (Wire.available() == 2) {
+    tmp = __wire_read();
+    tmp <<= 8;
+    tmp |= __wire_read();
+    level = tmp;
+    //}
   }
 
+  if (level != -1) {
   // Print raw value if debug enabled
   #ifdef BH1750_DEBUG
   Serial.print(F("[BH1750] Raw value: "));
   Serial.println(level);
   #endif
 
+  if (BH1750_MODE == BH1750::ONE_TIME_HIGH_RES_MODE_2 || BH1750_MODE == BH1750::CONTINUOUS_HIGH_RES_MODE_2) {
+  	level /= 2;
+  }
   // Convert raw value to lux
   level /= 1.2;
 
@@ -197,6 +206,7 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
   Serial.print(F("[BH1750] Converted value: "));
   Serial.println(level);
   #endif
+  }
 
   return level;
 
