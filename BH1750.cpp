@@ -141,7 +141,7 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
   }
 
   // Measurement result will be stored here
-  uint16_t level(NAN);
+  uint16_t level=65535;
 
   // Send mode to sensor
   Wire.beginTransmission(BH1750_I2CADDR);
@@ -171,6 +171,7 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
         maxWait ? _delay_ms(180) :_delay_ms(120);
       }
       break;
+    default: break;
   }
 
   // Read two bytes from the sensor, which are low and high parts of the sensor
