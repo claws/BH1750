@@ -180,12 +180,10 @@ float BH1750::readLightLevel(bool maxWait) {
   // value
   if (2 == Wire.requestFrom(BH1750_I2CADDR, 2)) {
     uint16_t tmp = 0;
-  //if (Wire.available() == 2) {
     tmp = __wire_read();
     tmp <<= 8;
     tmp |= __wire_read();
     level = tmp;
-    //}
   }
 
   if (level != -1) {
