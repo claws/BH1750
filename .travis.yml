@@ -1,7 +1,7 @@
 language: cpp
 env:
   global:
-    - ARDUINO_PACKAGE_VERSION=1.8.4
+    - ARDUINO_PACKAGE_VERSION=1.8.5
     - DISPLAY=:1.0
 
 before_install:

@@ -28,7 +28,7 @@
     - 0x23 (most common) (if ADD pin had < 0.7VCC voltage)
     - 0x5C (if ADD pin had > 0.7VCC voltage)
 
-  Library use 0x23 address as default, but you can define any other address.
+  Library uses 0x23 address as default, but you can define any other address.
   If you had troubles with default value - try to change it to 0x5C.
 
 */
@@ -44,23 +44,23 @@ void setup(){
 
   /*
 
-    BH1750 has six different measurment modes. They are divided in two groups -
-    continuous and one-time measurments. In continuous mode, sensor continuously
+    BH1750 has six different measurement modes. They are divided in two groups;
+    continuous and one-time measurements. In continuous mode, sensor continuously
     measures lightness value. In one-time mode the sensor makes only one
-    measurment and then goes into Power Down mode.
+    measurement and then goes into Power Down mode.
 
     Each mode, has three different precisions:
 
-      - Low Resolution Mode - (4 lx precision, 16ms measurment time)
-      - High Resolution Mode - (1 lx precision, 120ms measurment time)
-      - High Resolution Mode 2 - (0.5 lx precision, 120ms measurment time)
+      - Low Resolution Mode - (4 lx precision, 16ms measurement time)
+      - High Resolution Mode - (1 lx precision, 120ms measurement time)
+      - High Resolution Mode 2 - (0.5 lx precision, 120ms measurement time)
 
     By default, the library uses Continuous High Resolution Mode, but you can
     set any other mode, by passing it to BH1750.begin() or BH1750.configure()
     functions.
 
     [!] Remember, if you use One-Time mode, your sensor will go to Power Down
-    mode each time, when it completes measurment and you've read it.
+    mode each time, when it completes a measurement and you've read it.
 
     Full mode list:
 
@@ -74,8 +74,13 @@ void setup(){
 
   */
 
-  lightMeter.begin(BH1750_CONTINUOUS_HIGH_RES_MODE);
-  Serial.println(F("BH1750 Test"));
+  // begin returns a boolean that can be used to detect setup problems.
+  if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE)) {
+    Serial.println(F("BH1750 Advanced begin"));
+  }
+  else {
+    Serial.println(F("Error initialising BH1750"));
+  }
 
 }
 
