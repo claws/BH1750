@@ -60,7 +60,12 @@ class BH1750 {
     BH1750(byte addr = 0x23);
     bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE);
     bool configure(Mode mode);
+    #ifndef BH1750_FLOAT
+    uint16_t readLightLevel(bool maxWait = false);
+    #endif
+    #ifdef BH1750_FLOAT
     float readLightLevel(bool maxWait = false);
+    #endif
 
   private:
     int BH1750_I2CADDR;
