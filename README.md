@@ -39,13 +39,17 @@ back into One-Time mode. This library has been implemented to automatically
 reconfigure the sensor when you next attempt a measurement so you should not
 have to worry about such low level details.
 
-Usually you will get a float value which represent the lux equivalent.
-  - Low Resolution Mode - (0.0 up to 54612.5 lux)
-  - High Resolution Mode - (0.0 up to 54612.5 lux)
-  - High Resolution Mode 2 - (0.0 up to 27306.25 lux)
+Usually you will get an integer value which represent the lux equivalent.
+  - Low Resolution Mode - (generic range: 0.0 up to 54612.5 lux)
+  - High Resolution Mode - (generic range: 0.0 up to 54612.5 lux)
+  - High Resolution Mode 2 - (generic range: 0.0 up to 27306.25 lux)
 
 The sensor returns a 16 bit unsigned integer. Therefore the maximum value is limited in general. 
 The standard conversion between the so called 'counts' to lux is 1/1.2, that means you get a smaller value.
+If a error occurs you will get a positive value closely to the max.
+  - 65534 (65535-1) no valid data was transmitted from the sensor
+  - 65533 (65535-2) device is not configured
+If you use the float, you get:
 If a error occurs you will get a negative value.
   - -1 no valid data was transmitted from the sensor
   - -2 device is not configured
@@ -142,12 +146,12 @@ void loop() {
 Moving the sensor to face more light results in the lux measurements increasing.
 ```
 BH1750 Test
-Light: 70.0 lx
-Light: 70.0 lx
-Light: 59.0 lx
-Light: 328.0 lx
-Light: 333.0 lx
-Light: 335.0 lx
-Light: 332.0 lx
+Light: 70 lx
+Light: 70 lx
+Light: 59 lx
+Light: 328 lx
+Light: 333 lx
+Light: 335 lx
+Light: 332 lx
 ```
 There are more examples in the examples directory.
