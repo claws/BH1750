@@ -113,12 +113,16 @@ bool BH1750::configure(Mode mode) {
       return true;
     case 1: // too long for transmit buffer
       Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
+      break;
     case 2: // received NACK on transmit of address
       Serial.println(F("[BH1750] ERROR: received NACK on transmit of address"));
+      break;
     case 3: // received NACK on transmit of data
       Serial.println(F("[BH1750] ERROR: received NACK on transmit of data"));
+      break;
     case 4: // other error
       Serial.println(F("[BH1750] ERROR: other error"));
+      break;
     default:
       Serial.println(F("[BH1750] ERROR: undefined error"));
       break;
@@ -128,22 +132,90 @@ bool BH1750::configure(Mode mode) {
 
 }
 
+/**
+ * Configure BH1750 MTreg value
+ * MT reg = Measurement Time register
+ * @param MTreg a value between 32 and 254. Default: 69
+ * @return bool true if MTReg successful set
+ * 		false if MTreg not changed or parameter out of range
+ */
+bool BH1750::setMTreg(byte MTreg) {
+  //Bug: lowest value seems to be 32!
+  if (MTreg <= 31 || MTreg > 254) {
+    Serial.println(F("[BH1750] ERROR: MTreg out of range"));
+    return false;
+  }
+  byte ack = 5;
+  // Send MTreg and the current mode to the sensor
+  //   High bit: 01000_MT[7,6,5]
+  //    Low bit: 011_MT[4,3,2,1,0]
+  Wire.beginTransmission(BH1750_I2CADDR);
+  __wire_write((0b01000 << 3) | (MTreg >> 5));
+  ack = Wire.endTransmission();
+  Wire.beginTransmission(BH1750_I2CADDR);
+  __wire_write((0b011 << 5 )  | (MTreg & 0b111));
+  ack = ack | Wire.endTransmission();
+  Wire.beginTransmission(BH1750_I2CADDR);
+  __wire_write(BH1750_MODE);
+  ack = ack | Wire.endTransmission();
+
+  // Wait a few moments to wake up
+  _delay_ms(10);
+
+  // Check result code
+  switch (ack) {
+    case 0:
+      BH1750_MTreg = MTreg;
+      //Delay for specific continious mode to get valid values      
+    	switch (BH1750_MODE) {
+    	case BH1750::CONTINUOUS_LOW_RES_MODE:
+      		_delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+      		break;
+    	case BH1750::CONTINUOUS_HIGH_RES_MODE:
+    	case BH1750::CONTINUOUS_HIGH_RES_MODE_2:
+      		_delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+      		break;
+    	default: break;
+  	}
+      return true;
+    case 1: // too long for transmit buffer
+      Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
+      break;
+    case 2: // received NACK on transmit of address
+      Serial.println(F("[BH1750] ERROR: received NACK on transmit of address"));
+      break;
+    case 3: // received NACK on transmit of data
+      Serial.println(F("[BH1750] ERROR: received NACK on transmit of data"));
+      break;
+    case 4: // other error
+      Serial.println(F("[BH1750] ERROR: other error"));
+      break;
+    default:
+      Serial.println(F("[BH1750] ERROR: undefined error"));
+      break;
+  }
+
+  return false;
+}
+
 #ifndef BH1750_FLOAT
 /**
  * Read light level from sensor
- * @return Light level in lux (0.0 ~ 54613)
- * 	   65534 : no valid return value
- * 	   65533 : sensor not configured
+ * bool maxWait : Wait maximum measurement delay time or not
+ * bool hundredth: Multiply internally with 100 and return this
+ * @return Light level in lux (0 ~ 117758 [11775800/100])
+ * 	   -1 : no valid return value
+ * 	   -2 : sensor not configured
  */
-uint16_t BH1750::readLightLevel(bool maxWait) {
+int32_t BH1750::readLightLevel(bool maxWait, bool hundredth) {
 
   if (BH1750_MODE == UNCONFIGURED) {
     Serial.println(F("[BH1750] Device is not configured!"));
-    return 65535-2;
+    return -2;
   }
 
   // Measurement result will be stored here
-  uint16_t level = 65535;
+  int32_t level = 0;
 
   // Send mode to sensor
   Wire.beginTransmission(BH1750_I2CADDR);
@@ -163,23 +235,25 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
   switch (BH1750_MODE) {
 
     case BH1750::ONE_TIME_LOW_RES_MODE:
+      maxWait ? _delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : _delay_ms(16 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+      break;
     case BH1750::ONE_TIME_HIGH_RES_MODE:
     case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-
-      if (BH1750_MODE == BH1750::ONE_TIME_LOW_RES_MODE) {
-        maxWait ? _delay_ms(24) : _delay_ms(16);
-      }
-      else {
-        maxWait ? _delay_ms(180) :_delay_ms(120);
-      }
+      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+														 
+												
+	   
+			
+												 
+	   
       break;
     default: break;
   }
 
   // Read two bytes from the sensor, which are low and high parts of the sensor
   // value
-  if (2 == Wire.requestFrom(BH1750_I2CADDR, 2)) {
-    uint16_t tmp = 0;
+  if (2 == Wire.requestFrom((int)BH1750_I2CADDR, (int)2)) {
+    unsigned int tmp = 0;
     tmp = __wire_read();
     tmp <<= 8;
     tmp |= __wire_read();
@@ -190,23 +264,41 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
     Serial.print(F("[BH1750] Raw value: "));
     Serial.println(level);
     #endif
+    
+    //use .decimals in the calculation
+    level *= 100;
+    
+    if (BH1750_MTreg != (byte)BH1750_DEFAULT_MTREG) {
+     level *= (byte)BH1750_DEFAULT_MTREG;
+     level /= (byte)BH1750_MTreg;
+     // Print MTreg factor if debug enabled
+     #ifdef BH1750_DEBUG
+     Serial.print(F("[BH1750] MTreg factor: "));
+     Serial.print(BH1750_MTreg); Serial.print(F("/"));
+     Serial.println((byte)BH1750_DEFAULT_MTREG);
+     #endif
+    }
+    // Convert raw value to lux
+    level *= 10;
+    level /= BH1750_CONV_FACTOR;
 
     if (BH1750_MODE == BH1750::ONE_TIME_HIGH_RES_MODE_2 || BH1750_MODE == BH1750::CONTINUOUS_HIGH_RES_MODE_2) {
       level /= 2;
     }
-    // Convert raw value to lux
-    level /= 1.2;
-
+    if (!hundredth) {
+      level /= 100;
+    }
+    
     // Print converted value if debug enabled
     #ifdef BH1750_DEBUG
-    Serial.print(F("[BH1750] Converted value: "));
+    Serial.print(F("[BH1750] Converted int value: "));
     Serial.println(level);
     #endif
 
     return level;
   }
   else {
-    return 65535-1;
+    return -1;
   }
 
 
@@ -216,7 +308,7 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
 #ifdef BH1750_FLOAT
 /**
  * Read light level from sensor
- * @return Light level in lux (0.0 ~ 54612,5)
+ * @return Light level in lux (0.0 ~ 54612,5 [121556,85])
  * 	   -1 : no valid return value
  * 	   -2 : sensor not configured
  */
@@ -248,23 +340,25 @@ float BH1750::readLightLevel(bool maxWait) {
   switch (BH1750_MODE) {
 
     case BH1750::ONE_TIME_LOW_RES_MODE:
+      maxWait ? _delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : _delay_ms(16 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+      break;
     case BH1750::ONE_TIME_HIGH_RES_MODE:
     case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-
-      if (BH1750_MODE == BH1750::ONE_TIME_LOW_RES_MODE) {
-        maxWait ? _delay_ms(24) : _delay_ms(16);
-      }
-      else {
-        maxWait ? _delay_ms(180) :_delay_ms(120);
-      }
+      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+														 
+												
+	   
+			
+												 
+	   
       break;
     default: break;
   }
 
   // Read two bytes from the sensor, which are low and high parts of the sensor
   // value
-  if (2 == Wire.requestFrom(BH1750_I2CADDR, 2)) {
-    uint16_t tmp = 0;
+  if (2 == Wire.requestFrom((int)BH1750_I2CADDR, (int)2)) {
+    unsigned int tmp = 0;
     tmp = __wire_read();
     tmp <<= 8;
     tmp |= __wire_read();
@@ -272,23 +366,31 @@ float BH1750::readLightLevel(bool maxWait) {
   }
 
   if (level != -1) {
-  // Print raw value if debug enabled
-  #ifdef BH1750_DEBUG
-  Serial.print(F("[BH1750] Raw value: "));
-  Serial.println(level);
-  #endif
+    // Print raw value if debug enabled
+    #ifdef BH1750_DEBUG
+    Serial.print(F("[BH1750] Raw value: "));
+    Serial.println(level);
+    #endif
 
-  if (BH1750_MODE == BH1750::ONE_TIME_HIGH_RES_MODE_2 || BH1750_MODE == BH1750::CONTINUOUS_HIGH_RES_MODE_2) {
-  	level /= 2;
-  }
-  // Convert raw value to lux
-  level /= 1.2;
+    if (BH1750_MTreg != BH1750_DEFAULT_MTREG) {
+     level *= (float)((byte)BH1750_DEFAULT_MTREG/(float)BH1750_MTreg);
+     // Print MTreg factor if debug enabled
+     #ifdef BH1750_DEBUG
+     Serial.print(F("[BH1750] MTreg factor: "));
+     Serial.println( String((float)((byte)BH1750_DEFAULT_MTREG/(float)BH1750_MTreg)) );
+     #endif
+    }
+    if (BH1750_MODE == BH1750::ONE_TIME_HIGH_RES_MODE_2 || BH1750_MODE == BH1750::CONTINUOUS_HIGH_RES_MODE_2) {
+      level /= 2;
+    }
+    // Convert raw value to lux
+    level /= BH1750_CONV_FACTOR;
 
-  // Print converted value if debug enabled
-  #ifdef BH1750_DEBUG
-  Serial.print(F("[BH1750] Converted value: "));
-  Serial.println(level);
-  #endif
+    // Print converted value if debug enabled
+    #ifdef BH1750_DEBUG
+    Serial.print(F("[BH1750] Converted float value: "));
+    Serial.println(level);
+    #endif
   }
 
   return level;
