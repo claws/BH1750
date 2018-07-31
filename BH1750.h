@@ -10,7 +10,7 @@
   Datasheet: http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf
 
   Written by Christopher Laws, March, 2013.
-
+  Updated by Bogdan Brezuica, July 2018
 */
 
 #ifndef BH1750_h
@@ -57,12 +57,13 @@ class BH1750 {
       ONE_TIME_LOW_RES_MODE = 0x23
     };
 
-    BH1750(byte addr = 0x23);
-    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE);
+    BH1750();
+    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, TwoWire *i2c = &Wire, byte addr = 0x23);
     bool configure(Mode mode);
     uint16_t readLightLevel(bool maxWait = false);
 
   private:
+    TwoWire *_wire;
     int BH1750_I2CADDR;
     Mode BH1750_MODE = UNCONFIGURED;
 
