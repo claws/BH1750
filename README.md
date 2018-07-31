@@ -46,13 +46,14 @@ Usually you will get an integer value which represent the lux equivalent.
 
 The sensor returns a 16 bit unsigned integer. Therefore the maximum value is limited in general. 
 The standard conversion between the so called 'counts' to lux is 1/1.2, that means you get a smaller value.
-If a error occurs you will get a positive value closely to the max.
-  - 65534 (65535-1) no valid data was transmitted from the sensor
-  - 65533 (65535-2) device is not configured
-If you use the float, you get:
-If a error occurs you will get a negative value.
+As we use signed integer or float, if an error occurs you will get a negative value.
   - -1 no valid data was transmitted from the sensor
   - -2 device is not configured
+  
+As the sensor counts impact of light in a specific time frame you could change this time frame. 
+This is needed if you use an overlay windows or compensate environmental influence like darkness.
+This time frame is defined by a register which is called MTreg. Therefore you could choose a value between 32 and 254.
+The default value is 69; keep in mind that the measurement time is changed accordingly.
 
 The datasheet for the BH1750 chip can be obtained [here](http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf)
 
@@ -146,12 +147,12 @@ void loop() {
 Moving the sensor to face more light results in the lux measurements increasing.
 ```
 BH1750 Test
-Light: 70 lx
-Light: 70 lx
-Light: 59 lx
-Light: 328 lx
-Light: 333 lx
-Light: 335 lx
-Light: 332 lx
+Light: 70.0 lx
+Light: 70.0 lx
+Light: 59.0 lx
+Light: 328.0 lx
+Light: 333.0 lx
+Light: 335.0 lx
+Light: 332.0 lx
 ```
 There are more examples in the examples directory.

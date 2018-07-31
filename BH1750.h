@@ -36,6 +36,9 @@
 // Reset data register value - not accepted in POWER_DOWN mode
 #define BH1750_RESET 0x07
 
+// Default MTreg value
+#define BH1750_DEFAULT_MTREG 69
+
 class BH1750 {
 
   public:
@@ -60,15 +63,25 @@ class BH1750 {
     BH1750(byte addr = 0x23);
     bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE);
     bool configure(Mode mode);
+    bool setMTreg(byte MTreg);
     #ifndef BH1750_FLOAT
-    uint16_t readLightLevel(bool maxWait = false);
+    int32_t readLightLevel(bool maxWait = false, bool hundredth = false);
     #endif
     #ifdef BH1750_FLOAT
     float readLightLevel(bool maxWait = false);
     #endif
 
   private:
-    int BH1750_I2CADDR;
+    byte BH1750_I2CADDR;
+    byte BH1750_MTreg = (byte)BH1750_DEFAULT_MTREG;
+    // Correction factor used to calculate lux. Typical value is 1.2 but can range from 0.96 to 1.44.
+    // See data sheet (p.2, Measurement Accuracy) for more information.
+    #ifndef BH1750_FLOAT
+    const uint8_t BH1750_CONV_FACTOR = 12;
+    #endif
+    #ifdef BH1750_FLOAT
+    const float BH1750_CONV_FACTOR = 1.2;
+    #endif
     Mode BH1750_MODE = UNCONFIGURED;
 
 };
