@@ -113,12 +113,16 @@ bool BH1750::configure(Mode mode) {
       return true;
     case 1: // too long for transmit buffer
       Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
+      break;
     case 2: // received NACK on transmit of address
       Serial.println(F("[BH1750] ERROR: received NACK on transmit of address"));
+      break;
     case 3: // received NACK on transmit of data
       Serial.println(F("[BH1750] ERROR: received NACK on transmit of data"));
+      break;
     case 4: // other error
       Serial.println(F("[BH1750] ERROR: other error"));
+      break;
     default:
       Serial.println(F("[BH1750] ERROR: undefined error"));
       break;
