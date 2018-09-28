@@ -239,13 +239,7 @@ int32_t BH1750::readLightLevel(bool maxWait, bool hundredth) {
       break;
     case BH1750::ONE_TIME_HIGH_RES_MODE:
     case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-														 
-												
-	   
-			
-												 
-	   
+      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);													 
       break;
     default: break;
   }
@@ -316,11 +310,11 @@ float BH1750::readLightLevel(bool maxWait) {
 
   if (BH1750_MODE == UNCONFIGURED) {
     Serial.println(F("[BH1750] Device is not configured!"));
-    return -2;
+    return -2.0;
   }
 
   // Measurement result will be stored here
-  float level = -1;
+  float level = -1.0;
 
   // Send mode to sensor
   Wire.beginTransmission(BH1750_I2CADDR);
@@ -344,13 +338,7 @@ float BH1750::readLightLevel(bool maxWait) {
       break;
     case BH1750::ONE_TIME_HIGH_RES_MODE:
     case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-														 
-												
-	   
-			
-												 
-	   
+      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG); 
       break;
     default: break;
   }
@@ -365,7 +353,7 @@ float BH1750::readLightLevel(bool maxWait) {
     level = tmp;
   }
 
-  if (level != -1) {
+  if (level != -1.0) {
     // Print raw value if debug enabled
     #ifdef BH1750_DEBUG
     Serial.print(F("[BH1750] Raw value: "));

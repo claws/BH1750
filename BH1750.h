@@ -27,6 +27,9 @@
 // Uncomment, to enable debug messages
 // #define BH1750_DEBUG
 
+// Uncomment, to enable float values
+// #define BH1750_FLOAT
+
 // No active state
 #define BH1750_POWER_DOWN 0x00
 
