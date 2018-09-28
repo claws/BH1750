@@ -185,6 +185,8 @@ uint16_t BH1750::readLightLevel(bool maxWait) {
     level = __wire_read();
     level <<= 8;
     level |= __wire_read();
+  } else {
+	  Wire.reset();
   }
 
   // Print raw value if debug enabled
