@@ -10,10 +10,6 @@
   preparation for the next measurement.
 
 */
-/*
-  Remove the following if you want to use float
-*/
-//#define BH1750_FLOAT 1
 
 #include <Wire.h>
 #include <BH1750.h>

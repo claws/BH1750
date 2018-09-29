@@ -302,7 +302,8 @@ int32_t BH1750::readLightLevel(bool maxWait, bool hundredth) {
 #ifdef BH1750_FLOAT
 /**
  * Read light level from sensor
- * @return Light level in lux (0.0 ~ 54612,5 [121556,85])
+ * The return value differs if the MTreg value is changed. The global maximum value is noted in the square brackets
+ * @return Light level in lux (0.0 ~ 54612,5 [117758,203])
  * 	   -1 : no valid return value
  * 	   -2 : sensor not configured
  */

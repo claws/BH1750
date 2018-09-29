@@ -23,11 +23,6 @@
 #include <BH1750.h>
 
 /*
-  Remove the following if you want to use float
-*/
-//#define BH1750_FLOAT 1
-
-/*
   BH1750 can be physically configured to use two I2C addresses:
     - 0x23 (most common) (if ADD pin had < 0.7VCC voltage)
     - 0x5C (if ADD pin had > 0.7VCC voltage)
