@@ -44,11 +44,12 @@ Usually you will get an integer value which represent the lux equivalent.
   - High Resolution Mode - (generic range: 0.0 up to 54612.5 lux)
   - High Resolution Mode 2 - (generic range: 0.0 up to 27306.25 lux)
 
-The sensor returns a 16 bit unsigned integer. Therefore the maximum value is limited in general. 
+The sensor itself returns a 16 bit unsigned integer. Therefore the maximum value is limited in general. 
 The standard conversion between the so called 'counts' to lux is 1/1.2, that means you get a smaller value.
-As we use signed integer or float, if an error occurs you will get a negative value.
+As we use float, if an error occurs you will get a negative value.
   - -1 no valid data was transmitted from the sensor
   - -2 device is not configured
+Otherwise the measured counts are converted to lux and returned. If no advanced parameters are changed the maximum lux value is 54612.5 lx. 
   
 As the sensor counts impact of light in a specific time frame you could change this time frame. 
 This is needed if you use an overlay windows or compensate environmental influence like darkness.

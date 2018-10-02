@@ -42,26 +42,26 @@ void setup(){
 
 
 void loop() {
-  //we use here the maxWait option due fail save and we want reduced information loss due missing decimal part
-  float lux = lightMeter.readLightLevel(true, true)/100.0;
+  //we use here the maxWait option due fail save
+  float lux = lightMeter.readLightLevel(true);
   if (lux > 40000.0) {
     //reduce time slot - needed in direct sun light
     if(lightMeter.setMTreg(32)) {
       Serial.println(F("[DEBUG]: MTReg low"));
-      lux = lightMeter.readLightLevel(true, true)/100.0;
+      lux = lux = lightMeter.readLightLevel(true);
     }
   }
   else {
       if(lux > 10.0 && lightMeter.setMTreg(69)) { 
         Serial.println(F("[DEBUG]: MTReg default"));
-        lux = lightMeter.readLightLevel(true, true)/100.0;
+        lux = lux = lightMeter.readLightLevel(true);
       }
   }
   if (lux <= 10.0) {
     //very low light environment
     if(lightMeter.setMTreg(254)) {
       Serial.println(F("[DEBUG]: MTReg high"));
-      lux = lightMeter.readLightLevel(true, true)/100.0;
+      lux = lux = lightMeter.readLightLevel(true);
     }
   }
   Serial.print(F("Light: "));
