@@ -23,7 +23,6 @@
 #include <BH1750.h>
 
 /*
-
   BH1750 can be physically configured to use two I2C addresses:
     - 0x23 (most common) (if ADD pin had < 0.7VCC voltage)
     - 0x5C (if ADD pin had > 0.7VCC voltage)
@@ -87,7 +86,7 @@ void setup(){
 
 void loop() {
 
-  uint16_t lux = lightMeter.readLightLevel();
+  float lux = lightMeter.readLightLevel();
   Serial.print("Light: ");
   Serial.print(lux);
   Serial.println(" lx");

@@ -20,6 +20,7 @@
 
 */
 
+
 #include <Wire.h>
 #include <BH1750.h>
 
@@ -43,7 +44,7 @@ void setup(){
 
 void loop() {
 
-  uint16_t lux = lightMeter.readLightLevel();
+  float lux = lightMeter.readLightLevel();
   Serial.print("Light: ");
   Serial.print(lux);
   Serial.println(" lx");
