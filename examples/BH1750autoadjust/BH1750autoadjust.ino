@@ -3,12 +3,14 @@
   Example of BH1750 library usage.
 
   This example initialises the BH1750 object using the default high resolution
-  one shot mode and then makes a light level reading every five second.
+  one shot mode and then makes a light level reading every five seconds.
+
   After the measurement the MTreg value is changed according to the result:
-  lux > 40000 ==> MTreg =  32    
+  lux > 40000 ==> MTreg =  32
   lux < 40000 ==> MTreg =  69  (default)
   lux <    10 ==> MTreg = 138
-  Remember to test your specific sensor! Maybe the MTreg value range from 32 up to 254 is not applicable to your unit.
+  Remember to test your specific sensor! Maybe the MTreg value range from 32
+  up to 254 is not applicable to your unit.
 
   Connection:
 
@@ -39,7 +41,7 @@ void setup(){
   // On esp8266 you can select SCL and SDA pins using Wire.begin(D4, D3);
 
   lightMeter.begin(BH1750::ONE_TIME_HIGH_RES_MODE);
-  //lightMeter.setMTreg(69);  //not needed, only mentioning it
+  //lightMeter.setMTreg(69);  // not needed, only mentioning it
 
   Serial.println(F("BH1750 Test begin"));
 
@@ -51,9 +53,9 @@ void loop() {
   Serial.print(F("Light: "));
   Serial.print(lux);
   Serial.println(F(" lx"));
-  
+
   if (lux < 0) {
-    Serial.println(F("[DEBUG]: Error condition detected"));
+    Serial.println(F("Error condition detected"));
   }
   else {
     if (lux > 40000.0) {
@@ -62,13 +64,13 @@ void loop() {
         Serial.println(F("Setting MTReg to low value for high light environment"));
       }
       else {
-        Serial.println(F("Error setting MTReg to default value for normal light environment"));
+        Serial.println(F("Error setting MTReg to low value for high light environment"));
       }
     }
     else {
         if (lux > 10.0) {
           // typical light environment
-          if (lightMeter.setMTreg(69)) { 
+          if (lightMeter.setMTreg(69)) {
             Serial.println(F("Setting MTReg to default value for normal light environment"));
           }
           else {
@@ -89,6 +91,6 @@ void loop() {
     }
 
   }
-  Serial.println(F("--------------------------------------")); 
+  Serial.println(F("--------------------------------------"));
   delay(5000);
 }
