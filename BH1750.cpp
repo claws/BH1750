@@ -166,17 +166,18 @@ bool BH1750::setMTreg(byte MTreg) {
   switch (ack) {
     case 0:
       BH1750_MTreg = MTreg;
-      //Delay for specific continious mode to get valid values      
+      // Delay for specific continuous mode to get valid values
     	switch (BH1750_MODE) {
-    	case BH1750::CONTINUOUS_LOW_RES_MODE:
+    	  case BH1750::CONTINUOUS_LOW_RES_MODE:
       		_delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       		break;
-    	case BH1750::CONTINUOUS_HIGH_RES_MODE:
-    	case BH1750::CONTINUOUS_HIGH_RES_MODE_2:
+    	  case BH1750::CONTINUOUS_HIGH_RES_MODE:
+    	  case BH1750::CONTINUOUS_HIGH_RES_MODE_2:
       		_delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       		break;
-    	default: break;
-  	}
+    	  default:
+          break;
+  	  }
       return true;
     case 1: // too long for transmit buffer
       Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
@@ -200,7 +201,8 @@ bool BH1750::setMTreg(byte MTreg) {
 
 /**
  * Read light level from sensor
- * The return value differs if the MTreg value is changed. The global maximum value is noted in the square brackets
+ * The return value range differs if the MTreg value is changed. The global
+ * maximum value is noted in the square brackets.
  * @return Light level in lux (0.0 ~ 54612,5 [117758,203])
  * 	   -1 : no valid return value
  * 	   -2 : sensor not configured
@@ -237,9 +239,10 @@ float BH1750::readLightLevel(bool maxWait) {
       break;
     case BH1750::ONE_TIME_HIGH_RES_MODE:
     case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG); 
+      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       break;
-    default: break;
+    default:
+      break;
   }
 
   // Read two bytes from the sensor, which are low and high parts of the sensor

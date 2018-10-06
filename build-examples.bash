@@ -23,8 +23,13 @@ cd $ARDUINO_IDE_PATH
 for sketch in `find $SCRIPTPATH/examples -name '*.ino'`
 do
   echo "Compiling $sketch"
-  ./arduino-builder -hardware ./hardware -tools ./hardware/tools/avr -tools ./tools-builder -libraries ./libraries -fqbn arduino:avr:uno $sketch
-  # ./arduino-builder -hardware ./hardware -tools ./hardware/tools/avr -tools ./tools-builder -libraries ./libraries -fqbn esp8266:esp8266:generic $sketch
+  ./arduino-builder -hardware ./hardware -tools ./hardware/tools/avr -tools ./tools-builder -libraries ./libraries -fqbn arduino:avr:uno --prefs "compiler.warning_level=all" $sketch
+  # ./arduino-builder -hardware ./hardware -tools ./hardware/tools/avr -tools ./tools-builder -libraries ./libraries -fqbn esp8266:esp8266:generic --prefs "compiler.warning_level=all" $sketch
+  if [ $? -ne 0 ]; then
+    echo -e "\xe2\x9c\x96"  # check icon
+  else
+    echo -e "\xe2\x9c\x93"  # tick icon
+  fi
 done
 
 # Unlink BH1750 library from Arduino libraries directory
