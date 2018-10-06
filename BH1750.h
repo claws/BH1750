@@ -1,13 +1,12 @@
 /*
 
-  This is a library for the BH1750FVI Digital Light Sensor
-  breakout board.
+  This is a library for the BH1750FVI Digital Light Sensor breakout board.
 
   The BH1750 board uses I2C for communication. Two pins are required to
   interface to the device. Configuring the I2C bus is expected to be done
   in user code. The BH1750 library doesn't do this automatically.
 
-  Datasheet: http://rohmfs.rohm.com/en/products/databook/datasheet/ic/sensor/light/bh1750fvi-e.pdf
+  Datasheet: http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf
 
   Written by Christopher Laws, March, 2013.
 
@@ -69,8 +68,9 @@ class BH1750 {
   private:
     byte BH1750_I2CADDR;
     byte BH1750_MTreg = (byte)BH1750_DEFAULT_MTREG;
-    // Correction factor used to calculate lux. Typical value is 1.2 but can range from 0.96 to 1.44.
-    // See data sheet (p.2, Measurement Accuracy) for more information.
+    // Correction factor used to calculate lux. Typical value is 1.2 but can
+    // range from 0.96 to 1.44. See the data sheet (p.2, Measurement Accuracy)
+    // for more information.
     const float BH1750_CONV_FACTOR = 1.2;
     Mode BH1750_MODE = UNCONFIGURED;
 
