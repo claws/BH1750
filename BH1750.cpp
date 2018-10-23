@@ -65,6 +65,8 @@ bool BH1750::begin(Mode mode) {
 
   // I2C is expected to be initialized outside this library
 
+  //return to a known value
+  setMTreg(BH1750_DEFAULT_MTREG);
   // Configure sensor in specified mode
   return configure(mode);
 
