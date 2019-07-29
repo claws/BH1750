@@ -153,7 +153,7 @@ bool BH1750::setMTreg(byte MTreg) {
   __wire_write((0b01000 << 3) | (MTreg >> 5));
   ack = Wire.endTransmission();
   Wire.beginTransmission(BH1750_I2CADDR);
-  __wire_write((0b011 << 5 )  | (MTreg & 0b111));
+  __wire_write((0b011 << 5 )  | (MTreg & 0b11111));
   ack = ack | Wire.endTransmission();
   Wire.beginTransmission(BH1750_I2CADDR);
   __wire_write(BH1750_MODE);
