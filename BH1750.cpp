@@ -151,15 +151,15 @@ bool BH1750::setMTreg(byte MTreg) {
   // Send MTreg and the current mode to the sensor
   //   High bit: 01000_MT[7,6,5]
   //    Low bit: 011_MT[4,3,2,1,0]
-  _wire->beginTransmission(BH1750_I2CADDR);
-  _wire->write((0b01000 << 3) | (MTreg >> 5));
-  ack = _wire->endTransmission();
-  _wire->beginTransmission(BH1750_I2CADDR);
-  _wire->write((0b011 << 5 )  | (MTreg & 0b11111));
-  ack = ack | _wire->endTransmission();
-  _wire->beginTransmission(BH1750_I2CADDR);
-  _wire->write(BH1750_MODE);
-  ack = ack | _wire->endTransmission();
+  Wire.beginTransmission(BH1750_I2CADDR);
+  __wire_write((0b01000 << 3) | (MTreg >> 5));
+  ack = Wire.endTransmission();
+  Wire.beginTransmission(BH1750_I2CADDR);
+  __wire_write((0b011 << 5 )  | (MTreg & 0b11111));
+  ack = ack | Wire.endTransmission();
+  Wire.beginTransmission(BH1750_I2CADDR);
+  __wire_write(BH1750_MODE);
+  ack = ack | Wire.endTransmission();
 
   // Wait a few moments to wake up
   _delay_ms(10);
@@ -233,17 +233,17 @@ float BH1750::readLightLevel(bool maxWait) {
 
     case BH1750::ONE_TIME_LOW_RES_MODE:
       // Send mode to sensor
-      _wire->beginTransmission(BH1750_I2CADDR);
-      _wire->write((uint8_t)BH1750_MODE);
-      _wire->endTransmission();
+      Wire.beginTransmission(BH1750_I2CADDR);
+      __wire_write((uint8_t)BH1750_MODE);
+      Wire.endTransmission();
       maxWait ? _delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : _delay_ms(16 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       break;
     case BH1750::ONE_TIME_HIGH_RES_MODE:
     case BH1750::ONE_TIME_HIGH_RES_MODE_2:
       // Send mode to sensor
-      _wire->beginTransmission(BH1750_I2CADDR);
-      _wire->write((uint8_t)BH1750_MODE);
-      _wire->endTransmission();
+      Wire.beginTransmission(BH1750_I2CADDR);
+      __wire_write((uint8_t)BH1750_MODE);
+      Wire.endTransmission();
       maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       break;
     default:
