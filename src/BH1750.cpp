@@ -240,29 +240,17 @@ float BH1750::readLightLevel(bool maxWait) {
 
     case BH1750::ONE_TIME_LOW_RES_MODE:
       // Send mode to sensor
-<<<<<<< HEAD:src/BH1750.cpp
       I2C->beginTransmission(BH1750_I2CADDR);
       __wire_write((uint8_t)BH1750_MODE);
       I2C->endTransmission();
-=======
-      _wire->beginTransmission(BH1750_I2CADDR);
-      _wire->write((uint8_t)BH1750_MODE);
-      _wire->endTransmission();
->>>>>>> ea80121 (fix continuous mode reset):BH1750.cpp
       maxWait ? _delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : _delay_ms(16 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       break;
     case BH1750::ONE_TIME_HIGH_RES_MODE:
     case BH1750::ONE_TIME_HIGH_RES_MODE_2:
       // Send mode to sensor
-<<<<<<< HEAD:src/BH1750.cpp
       I2C->beginTransmission(BH1750_I2CADDR);
       __wire_write((uint8_t)BH1750_MODE);
       I2C->endTransmission();
-=======
-      _wire->beginTransmission(BH1750_I2CADDR);
-      _wire->write((uint8_t)BH1750_MODE);
-      _wire->endTransmission();
->>>>>>> ea80121 (fix continuous mode reset):BH1750.cpp
       maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       break;
     default:
