@@ -60,7 +60,8 @@ class BH1750 {
     };
 
     BH1750(byte addr = 0x23);
-    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE);
+    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = 0x23,
+               TwoWire* i2c = nullptr);
     bool configure(Mode mode);
     bool setMTreg(byte MTreg);
     float readLightLevel(bool maxWait = false);
@@ -73,7 +74,7 @@ class BH1750 {
     // for more information.
     const float BH1750_CONV_FACTOR = 1.2;
     Mode BH1750_MODE = UNCONFIGURED;
-
+    TwoWire* I2C;
 };
 
 #endif
