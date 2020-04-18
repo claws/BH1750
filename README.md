@@ -156,4 +156,8 @@ Light: 333.0 lx
 Light: 335.0 lx
 Light: 332.0 lx
 ```
-There are more examples in the examples directory.
+
+## More Examples
+
+The ``examples`` directory contains more advanced use cases such as using different modes, I2C addresses and multiple Wire instances.
+
