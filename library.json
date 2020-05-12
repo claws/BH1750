@@ -1,11 +1,12 @@
 {
   "name": "BH1750",
-  "keywords": "light, sensor",
-  "description": "Digital light sensor breakout boards containing the BH1750FVI IC",
+  "keywords": "BH1750FVI, light, lux, sensor, Arduino, ESP8266, ESP32",
+  "description": "Arduino library for the digital light sensor breakout boards containing the BH1750FVI IC. Arduino, ESP8266 & ESP32 compatible.",
   "repository": {
     "type": "git",
     "url": "https://github.com/claws/BH1750.git"
   },
   "frameworks": "arduino",
-  "platforms": ["atmelavr", "atmelsam", "espressif8266"]
+  "platforms": ["atmelavr", "atmelsam", "espressif8266", "espressif32"],
+  "version": "1.1.4"
 }
