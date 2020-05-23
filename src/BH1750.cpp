@@ -102,7 +102,7 @@ bool BH1750::configure(Mode mode) {
 
       // Send mode to sensor
       I2C->beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)BH1750_MODE);
+      __wire_write((uint8_t)mode);
       ack = I2C->endTransmission();
 
       // Wait a few moments to wake up
