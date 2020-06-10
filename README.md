@@ -59,7 +59,7 @@ The default value is 69; keep in mind that the measurement time is changed accor
 The datasheet for the BH1750 chip can be obtained [here](http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf)
 
 
-## Installation
+## Installation [![arduino-library-badge](https://www.ardu-badge.com/badge/BH1750.svg?)](https://www.ardu-badge.com/BH1750)
 
 Click "Clone or download" -> "Download ZIP" button.
 
@@ -156,4 +156,8 @@ Light: 333.0 lx
 Light: 335.0 lx
 Light: 332.0 lx
 ```
-There are more examples in the examples directory.
+
+## More Examples
+
+The ``examples`` directory contains more advanced use cases such as using different modes, I2C addresses and multiple Wire instances.
+

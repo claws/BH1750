@@ -30,17 +30,17 @@
 
 // Legacy Wire.write() function fix
 #if (ARDUINO >= 100)
-  #define __wire_write(d) Wire.write(d)
+  #define __wire_write(d) I2C->write(d)
 #else
-  #define __wire_write(d) Wire.send(d)
+  #define __wire_write(d) I2C->send(d)
 #endif
 
 
 // Legacy Wire.read() function fix
 #if (ARDUINO >= 100)
-  #define __wire_read() Wire.read()
+  #define __wire_read() I2C->read()
 #else
-  #define __wire_read() Wire.receive()
+  #define __wire_read() I2C->receive()
 #endif
 
 
@@ -53,17 +53,27 @@
 BH1750::BH1750(byte addr) {
 
   BH1750_I2CADDR = addr;
-
+  // Allows user to change TwoWire instance
+  I2C = &Wire;
 }
 
 
 /**
  * Configure sensor
  * @param mode Measurement mode
+ * @param addr Address of the sensor
+ * @param i2c TwoWire instance connected to I2C bus
  */
-bool BH1750::begin(Mode mode) {
+bool BH1750::begin(Mode mode, byte addr, TwoWire *i2c) {
 
   // I2C is expected to be initialized outside this library
+  // But, allows a different address and TwoWire instance to be used
+  if(i2c) {
+    I2C = i2c;
+  }
+  if(addr) {
+    BH1750_I2CADDR = addr;
+  }
 
   //return to a known value
   setMTreg(BH1750_DEFAULT_MTREG);
@@ -93,9 +103,9 @@ bool BH1750::configure(Mode mode) {
     case BH1750::ONE_TIME_LOW_RES_MODE:
 
       // Send mode to sensor
-      Wire.beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)BH1750_MODE);
-      ack = Wire.endTransmission();
+      I2C->beginTransmission(BH1750_I2CADDR);
+      __wire_write((uint8_t)mode);
+      ack = I2C->endTransmission();
 
       // Wait a few moments to wake up
       _delay_ms(10);
@@ -151,15 +161,15 @@ bool BH1750::setMTreg(byte MTreg) {
   // Send MTreg and the current mode to the sensor
   //   High bit: 01000_MT[7,6,5]
   //    Low bit: 011_MT[4,3,2,1,0]
-  Wire.beginTransmission(BH1750_I2CADDR);
+  I2C->beginTransmission(BH1750_I2CADDR);
   __wire_write((0b01000 << 3) | (MTreg >> 5));
-  ack = Wire.endTransmission();
-  Wire.beginTransmission(BH1750_I2CADDR);
+  ack = I2C->endTransmission();
+  I2C->beginTransmission(BH1750_I2CADDR);
   __wire_write((0b011 << 5 )  | (MTreg & 0b11111));
-  ack = ack | Wire.endTransmission();
-  Wire.beginTransmission(BH1750_I2CADDR);
+  ack = ack | I2C->endTransmission();
+  I2C->beginTransmission(BH1750_I2CADDR);
   __wire_write(BH1750_MODE);
-  ack = ack | Wire.endTransmission();
+  ack = ack | I2C->endTransmission();
 
   // Wait a few moments to wake up
   _delay_ms(10);
@@ -219,6 +229,11 @@ float BH1750::readLightLevel(bool maxWait) {
   // Measurement result will be stored here
   float level = -1.0;
 
+  // Send mode to sensor
+  I2C->beginTransmission(BH1750_I2CADDR);
+  __wire_write((uint8_t)BH1750_MODE);
+  I2C->endTransmission();
+
   // Wait for measurement to be taken.
   // Measurements have a maximum measurement time and a typical measurement
   // time. The maxWait argument determines which measurement wait time is
@@ -252,7 +267,7 @@ float BH1750::readLightLevel(bool maxWait) {
 
   // Read two bytes from the sensor, which are low and high parts of the sensor
   // value
-  if (2 == Wire.requestFrom((int)BH1750_I2CADDR, (int)2)) {
+  if (2 == I2C->requestFrom((int)BH1750_I2CADDR, (int)2)) {
     unsigned int tmp = 0;
     tmp = __wire_read();
     tmp <<= 8;
