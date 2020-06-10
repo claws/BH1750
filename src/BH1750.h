@@ -29,7 +29,7 @@
 // No active state
 #define BH1750_POWER_DOWN 0x00
 
-// Wating for measurement command
+// Waiting for measurement command
 #define BH1750_POWER_ON 0x01
 
 // Reset data register value - not accepted in POWER_DOWN mode
@@ -45,22 +45,23 @@ class BH1750 {
     enum Mode
     {
       UNCONFIGURED = 0,
-      // Measurement at 1lx resolution. Measurement time is approx 120ms.
+      // Measurement at 1 lux resolution. Measurement time is approx 120ms.
       CONTINUOUS_HIGH_RES_MODE  = 0x10,
-      // Measurement at 0.5lx resolution. Measurement time is approx 120ms.
+      // Measurement at 0.5 lux resolution. Measurement time is approx 120ms.
       CONTINUOUS_HIGH_RES_MODE_2 = 0x11,
-      // Measurement at 4lx resolution. Measurement time is approx 16ms.
+      // Measurement at 4 lux resolution. Measurement time is approx 16ms.
       CONTINUOUS_LOW_RES_MODE = 0x13,
-      // Measurement at 1lx resolution. Measurement time is approx 120ms.
+      // Measurement at 1 lux resolution. Measurement time is approx 120ms.
       ONE_TIME_HIGH_RES_MODE = 0x20,
-      // Measurement at 0.5lx resolution. Measurement time is approx 120ms.
+      // Measurement at 0.5 lux resolution. Measurement time is approx 120ms.
       ONE_TIME_HIGH_RES_MODE_2 = 0x21,
-      // Measurement at 1lx resolution. Measurement time is approx 120ms.
+      // Measurement at 4 lux resolution. Measurement time is approx 16ms.
       ONE_TIME_LOW_RES_MODE = 0x23
     };
 
     BH1750(byte addr = 0x23);
-    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE);
+    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = 0x23,
+               TwoWire* i2c = nullptr);
     bool configure(Mode mode);
     bool setMTreg(byte MTreg);
     float readLightLevel(bool maxWait = false);
@@ -73,7 +74,7 @@ class BH1750 {
     // for more information.
     const float BH1750_CONV_FACTOR = 1.2;
     Mode BH1750_MODE = UNCONFIGURED;
-
+    TwoWire* I2C;
 };
 
 #endif
