@@ -75,10 +75,8 @@ bool BH1750::begin(Mode mode, byte addr, TwoWire *i2c) {
     BH1750_I2CADDR = addr;
   }
 
-  //return to a known value
-  setMTreg(BH1750_DEFAULT_MTREG);
-  // Configure sensor in specified mode
-  return configure(mode);
+  // Configure sensor in specified mode and set default MTreg
+  return (configure(mode) && setMTreg(BH1750_DEFAULT_MTREG));
 
 }
 
