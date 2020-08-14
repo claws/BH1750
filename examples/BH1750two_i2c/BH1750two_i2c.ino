@@ -49,8 +49,10 @@ int error_counter_1_b = 0;
 int error_counter_2_b = 0;
 
 void loop() {
-  const float light_level_a = bh1750_a.readLightLevel();
-  const float light_level_b = bh1750_b.readLightLevel();
+  float light_level_a;
+  if (bh1750_a.measurementReady()) { light_level_a = bh1750_a.readLightLevel(); }
+  float light_level_b; 
+  if (bh1750_b.measurementReady()) { light_level_b = bh1750_b.readLightLevel(); }
 
   if (lround(light_level_a) == -1) {
     error_counter_1_a++;
