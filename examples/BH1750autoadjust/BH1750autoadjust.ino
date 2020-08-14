@@ -49,48 +49,50 @@ void setup(){
 
 void loop() {
   //we use here the maxWait option due fail save
-  float lux = lightMeter.readLightLevel(true);
-  Serial.print(F("Light: "));
-  Serial.print(lux);
-  Serial.println(F(" lx"));
+  if (lightMeter.measurementReady(true)) {    
+    float lux = lightMeter.readLightLevel();
+    Serial.print(F("Light: "));
+    Serial.print(lux);
+    Serial.println(F(" lx"));
 
-  if (lux < 0) {
-    Serial.println(F("Error condition detected"));
-  }
-  else {
-    if (lux > 40000.0) {
-      // reduce measurement time - needed in direct sun light
-      if (lightMeter.setMTreg(32)) {
-        Serial.println(F("Setting MTReg to low value for high light environment"));
-      }
-      else {
-        Serial.println(F("Error setting MTReg to low value for high light environment"));
-      }
+    if (lux < 0) {
+      Serial.println(F("Error condition detected"));
     }
     else {
-        if (lux > 10.0) {
-          // typical light environment
-          if (lightMeter.setMTreg(69)) {
-            Serial.println(F("Setting MTReg to default value for normal light environment"));
-          }
-          else {
-            Serial.println(F("Error setting MTReg to default value for normal light environment"));
-          }
+      if (lux > 40000.0) {
+        // reduce measurement time - needed in direct sun light
+        if (lightMeter.setMTreg(32)) {
+          Serial.println(F("Setting MTReg to low value for high light environment"));
         }
         else {
-          if (lux <= 10.0) {
-            //very low light environment
-            if (lightMeter.setMTreg(138)) {
-              Serial.println(F("Setting MTReg to high value for low light environment"));
+          Serial.println(F("Error setting MTReg to low value for high light environment"));
+        }
+      }
+      else {
+          if (lux > 10.0) {
+            // typical light environment
+            if (lightMeter.setMTreg(69)) {
+              Serial.println(F("Setting MTReg to default value for normal light environment"));
             }
             else {
-              Serial.println(F("Error setting MTReg to high value for low light environment"));
+              Serial.println(F("Error setting MTReg to default value for normal light environment"));
             }
           }
-       }
-    }
+          else {
+            if (lux <= 10.0) {
+              //very low light environment
+              if (lightMeter.setMTreg(138)) {
+                Serial.println(F("Setting MTReg to high value for low light environment"));
+              }
+              else {
+                Serial.println(F("Error setting MTReg to high value for low light environment"));
+              }
+            }
+        }
+      }
 
+    }
+    Serial.println(F("--------------------------------------"));
   }
-  Serial.println(F("--------------------------------------"));
   delay(5000);
 }

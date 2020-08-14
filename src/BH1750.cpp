@@ -77,7 +77,6 @@ bool BH1750::begin(Mode mode, byte addr, TwoWire *i2c) {
 
   // Configure sensor in specified mode and set default MTreg
   return (configure(mode) && setMTreg(BH1750_DEFAULT_MTREG));
-
 }
 
 
@@ -120,6 +119,7 @@ bool BH1750::configure(Mode mode) {
   switch (ack) {
     case 0:
       BH1750_MODE = mode;
+      lastReadTimestamp = millis();
       return true;
     case 1: // too long for transmit buffer
       Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
@@ -176,18 +176,6 @@ bool BH1750::setMTreg(byte MTreg) {
   switch (ack) {
     case 0:
       BH1750_MTreg = MTreg;
-      // Delay for specific continuous mode to get valid values
-    	switch (BH1750_MODE) {
-    	  case BH1750::CONTINUOUS_LOW_RES_MODE:
-      		_delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-      		break;
-    	  case BH1750::CONTINUOUS_HIGH_RES_MODE:
-    	  case BH1750::CONTINUOUS_HIGH_RES_MODE_2:
-      		_delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-      		break;
-    	  default:
-          break;
-  	  }
       return true;
     case 1: // too long for transmit buffer
       Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
@@ -210,6 +198,44 @@ bool BH1750::setMTreg(byte MTreg) {
 }
 
 /**
+ * Checks whether enough time has gone to read a new value
+ * @param maxWait a boolean if to wait for typical or maximum delay
+ * @return a boolean if a new measurement is possible
+ * 
+ */
+bool BH1750::measurementReady(bool maxWait) {
+  unsigned long delaytime = 0;
+  switch (BH1750_MODE) {
+    case BH1750::CONTINUOUS_HIGH_RES_MODE:
+    case BH1750::CONTINUOUS_HIGH_RES_MODE_2:
+    case BH1750::ONE_TIME_HIGH_RES_MODE:
+    case BH1750::ONE_TIME_HIGH_RES_MODE_2:
+      maxWait ? delaytime = (180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : delaytime = (120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+      break;
+    case BH1750::CONTINUOUS_LOW_RES_MODE:
+    case BH1750::ONE_TIME_LOW_RES_MODE:
+      // Send mode to sensor
+      maxWait ? delaytime = (24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : delaytime = (16 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
+      break;
+    default:
+      break;
+  }
+  // Wait for new measurement to be possible.
+  // Measurements have a maximum measurement time and a typical measurement
+  // time. The maxWait argument determines which measurement wait time is
+  // used when a one-time mode is being used. The typical (shorter)
+  // measurement time is used by default and if maxWait is set to True then
+  // the maximum measurement time will be used. See data sheet pages 2, 5
+  // and 7 for more details.
+  unsigned long currentTimestamp = millis();
+    if (currentTimestamp - lastReadTimestamp >= delaytime) {
+      return true;
+    }
+    else
+      return false;
+}
+
+/**
  * Read light level from sensor
  * The return value range differs if the MTreg value is changed. The global
  * maximum value is noted in the square brackets.
@@ -217,7 +243,7 @@ bool BH1750::setMTreg(byte MTreg) {
  * 	   -1 : no valid return value
  * 	   -2 : sensor not configured
  */
-float BH1750::readLightLevel(bool maxWait) {
+float BH1750::readLightLevel() {
 
   if (BH1750_MODE == UNCONFIGURED) {
     Serial.println(F("[BH1750] Device is not configured!"));
@@ -226,42 +252,6 @@ float BH1750::readLightLevel(bool maxWait) {
 
   // Measurement result will be stored here
   float level = -1.0;
-
-  // Send mode to sensor
-  I2C->beginTransmission(BH1750_I2CADDR);
-  __wire_write((uint8_t)BH1750_MODE);
-  I2C->endTransmission();
-
-  // Wait for measurement to be taken.
-  // Measurements have a maximum measurement time and a typical measurement
-  // time. The maxWait argument determines which measurement wait time is
-  // used when a one-time mode is being used. The typical (shorter)
-  // measurement time is used by default and if maxWait is set to True then
-  // the maximum measurement time will be used. See data sheet pages 2, 5
-  // and 7 for more details.
-  // A continuous mode measurement can be read immediately after re-sending
-  // the mode command.
-
-  switch (BH1750_MODE) {
-
-    case BH1750::ONE_TIME_LOW_RES_MODE:
-      // Send mode to sensor
-      Wire.beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)BH1750_MODE);
-      Wire.endTransmission();
-      maxWait ? _delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : _delay_ms(16 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-      break;
-    case BH1750::ONE_TIME_HIGH_RES_MODE:
-    case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-      // Send mode to sensor
-      Wire.beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)BH1750_MODE);
-      Wire.endTransmission();
-      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-      break;
-    default:
-      break;
-  }
 
   // Read two bytes from the sensor, which are low and high parts of the sensor
   // value
@@ -272,6 +262,7 @@ float BH1750::readLightLevel(bool maxWait) {
     tmp |= __wire_read();
     level = tmp;
   }
+  lastReadTimestamp = millis();
 
   if (level != -1.0) {
     // Print raw value if debug enabled
@@ -281,12 +272,12 @@ float BH1750::readLightLevel(bool maxWait) {
     #endif
 
     if (BH1750_MTreg != BH1750_DEFAULT_MTREG) {
-     level *= (float)((byte)BH1750_DEFAULT_MTREG/(float)BH1750_MTreg);
-     // Print MTreg factor if debug enabled
-     #ifdef BH1750_DEBUG
-     Serial.print(F("[BH1750] MTreg factor: "));
-     Serial.println( String((float)((byte)BH1750_DEFAULT_MTREG/(float)BH1750_MTreg)) );
-     #endif
+      level *= (float)((byte)BH1750_DEFAULT_MTREG/(float)BH1750_MTreg);
+      // Print MTreg factor if debug enabled
+      #ifdef BH1750_DEBUG
+      Serial.print(F("[BH1750] MTreg factor: "));
+      Serial.println( String((float)((byte)BH1750_DEFAULT_MTREG/(float)BH1750_MTreg)) );
+      #endif
     }
     if (BH1750_MODE == BH1750::ONE_TIME_HIGH_RES_MODE_2 || BH1750_MODE == BH1750::CONTINUOUS_HIGH_RES_MODE_2) {
       level /= 2;

@@ -33,10 +33,12 @@ void setup(){
 
 void loop() {
 
+  while (!lightMeter.measurementReady(true)) {
+    yield();
+  }
   float lux = lightMeter.readLightLevel();
   Serial.print("Light: ");
   Serial.print(lux);
   Serial.println(" lx");
-  delay(1000);
-
+  lightMeter.configure(BH1750::ONE_TIME_HIGH_RES_MODE);
 }
