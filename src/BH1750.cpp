@@ -46,14 +46,13 @@
 
 /**
  * Constructor
- * @params addr Sensor address (0x76 or 0x72, see datasheet)
+ * @params addr Sensor address (0x23 or 0x5C, see datasheet)
  *
- * On most sensor boards, it was 0x76
+ * On most sensor boards, it was 0x23
  */
 BH1750::BH1750(byte addr) {
 
   BH1750_I2CADDR = addr;
-  // Allows user to change TwoWire instance
   I2C = &Wire;
 }
 
@@ -251,7 +250,7 @@ float BH1750::readLightLevel(bool maxWait) {
       // Send mode to sensor
       I2C->beginTransmission(BH1750_I2CADDR);
       __wire_write((uint8_t)BH1750_MODE);
-      I2C->.endTransmission();
+      I2C->endTransmission();
       maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
       break;
     default:
