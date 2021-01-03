@@ -52,7 +52,7 @@ As we use float, if an error occurs you will get a negative value.
 Otherwise the measured counts are converted to lux and returned. If no advanced parameters are changed the maximum lux value is 54612.5 lx. 
   
 As the sensor counts impact of light in a specific time frame you could change this time frame. 
-This is needed if you use an overlay windows or compensate environmental influence like darkness.
+This is needed if you use an overlay window or compensate for environmental influence like darkness.
 This time frame is defined by a register which is called MTreg. Therefore you could choose a value between 32 and 254.
 The default value is 69; keep in mind that the measurement time is changed accordingly.
 
@@ -62,23 +62,24 @@ The datasheet for the BH1750 chip can be obtained
 
 ## Installation [![arduino-library-badge](https://www.ardu-badge.com/badge/BH1750.svg?)](https://www.ardu-badge.com/BH1750)
 
-Click "Clone or download" -> "Download ZIP" button.
+- **(For Arduino >= 1.5.x)** Install this package by searching for it in the 
+  Arduino Library Manager and then clicking ``install``. Alternatively, this
+  library can be installed manually by clicking "Clone or download" -> "Download ZIP" 
+  button. Then open Arduino IDE, click `Sketch -> Include library -> Add .ZIP library` 
+  and select the downloaded archive.
 
-  - **(For Arduino >= 1.5.x)** Use the way above, or Library Manager. Open Arduino
-    IDE, click `Sketch -> Include library -> Add .ZIP library ` and select the
-    downloaded archive.
-
-  - **(For Arduino < 1.5.x)** Extract the archive to
-    ``<Your User Directory>/My Documents/Arduino/libraries/`` folder and rename it
-    to `BH1750`. Restart IDE.
+- **(For Arduino < 1.5.x)** Download this package as an archive by clicking 
+  "Clone or download" -> "Download ZIP" button. Then extract the archive to 
+  ``<Your User Directory>/My Documents/Arduino/libraries/`` folder and rename 
+  it to `BH1750`. Restart IDE.
 
 The following YouTube [video](https://youtu.be/ACTMQvPVMLs) (specifically from
-7:20 onwards) provides a good overview of installing this library and loading
-an example using the Arduino IDE.
+7:20 onwards) provides a good overview of manually installing this library and 
+loading an example using the Arduino IDE.
 
 [![BH1750 Video Tutorial](https://img.youtube.com/vi/ACTMQvPVMLs/0.jpg)](https://youtu.be/ACTMQvPVMLs?t=437)
 
-Additional info, about library installation process - https://www.arduino.cc/en/Guide/Libraries
+Information about the library installation process - https://www.arduino.cc/en/Guide/Libraries
 
 
 ## Example
