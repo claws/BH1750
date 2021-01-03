@@ -85,11 +85,11 @@ void setup(){
 
 
 void loop() {
-
-  float lux = lightMeter.readLightLevel();
-  Serial.print("Light: ");
-  Serial.print(lux);
-  Serial.println(" lx");
-  delay(1000);
+  if (lightMeter.measurementReady()) {
+    float lux = lightMeter.readLightLevel();
+    Serial.print("Light: ");
+    Serial.print(lux);
+    Serial.println(" lx");
+  }
 
 }

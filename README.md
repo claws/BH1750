@@ -56,7 +56,8 @@ This is needed if you use an overlay windows or compensate environmental influen
 This time frame is defined by a register which is called MTreg. Therefore you could choose a value between 32 and 254.
 The default value is 69; keep in mind that the measurement time is changed accordingly.
 
-The datasheet for the BH1750 chip can be obtained [here](http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf)
+The datasheet for the BH1750 chip can be obtained
+[here](https://www.mouser.de/datasheet/2/348/Rohm_11162017_ROHMS34826-1-1279292.pdf)[2011.11 Rev.D]
 
 
 ## Installation [![arduino-library-badge](https://www.ardu-badge.com/badge/BH1750.svg?)](https://www.ardu-badge.com/BH1750)

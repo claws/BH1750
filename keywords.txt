@@ -16,7 +16,7 @@ begin	KEYWORD2
 configure	KEYWORD2
 setMTreg	KEYWORD2
 readLightLevel	KEYWORD2
-
+measurementReady    KEYWORD2
 #######################################
 # Instances (KEYWORD2)
 #######################################

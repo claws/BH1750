@@ -44,6 +44,7 @@ class BH1750 {
 
     enum Mode
     {
+      // same as Power Down 
       UNCONFIGURED = 0,
       // Measurement at 1 lux resolution. Measurement time is approx 120ms.
       CONTINUOUS_HIGH_RES_MODE  = 0x10,
@@ -64,7 +65,8 @@ class BH1750 {
                TwoWire* i2c = nullptr);
     bool configure(Mode mode);
     bool setMTreg(byte MTreg);
-    float readLightLevel(bool maxWait = false);
+    bool measurementReady(bool maxWait = false);
+    float readLightLevel();
 
   private:
     byte BH1750_I2CADDR;
@@ -75,6 +77,7 @@ class BH1750 {
     const float BH1750_CONV_FACTOR = 1.2;
     Mode BH1750_MODE = UNCONFIGURED;
     TwoWire* I2C;
+    unsigned long lastReadTimestamp;
 };
 
 #endif
