@@ -46,38 +46,26 @@
 
 /**
  * Constructor
- * @params addr Sensor address (0x23 or 0x5C, see datasheet)
- *
- * On most sensor boards, it was 0x23
  */
-BH1750::BH1750(byte addr) {
-
-  BH1750_I2CADDR = addr;
-  I2C = &Wire;
+BH1750::BH1750() {
 }
-
 
 /**
  * Configure sensor
  * @param mode Measurement mode
- * @param addr Address of the sensor
+ * @param addr Address of the sensor (0x23 or 0x5C, see datasheet)
  * @param i2c TwoWire instance connected to I2C bus
  */
 bool BH1750::begin(Mode mode, byte addr, TwoWire *i2c) {
 
   // I2C is expected to be initialized outside this library
   // But, allows a different address and TwoWire instance to be used
-  if(i2c) {
-    I2C = i2c;
-  }
-  if(addr) {
-    BH1750_I2CADDR = addr;
-  }
+  I2C = i2c;
+  BH1750_I2CADDR = addr;
 
   // Configure sensor in specified mode and set default MTreg
   return (configure(mode) && setMTreg(BH1750_DEFAULT_MTREG));
 }
-
 
 /**
  * Configure BH1750 with specified mode

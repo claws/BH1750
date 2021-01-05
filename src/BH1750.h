@@ -60,16 +60,16 @@ class BH1750 {
       ONE_TIME_LOW_RES_MODE = 0x23
     };
 
-    BH1750(byte addr = 0x23);
+    BH1750();
     bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = 0x23,
-               TwoWire* i2c = nullptr);
+               TwoWire* i2c = &Wire);
     bool configure(Mode mode);
     bool setMTreg(byte MTreg);
     bool measurementReady(bool maxWait = false);
     float readLightLevel();
 
   private:
-    byte BH1750_I2CADDR;
+    byte BH1750_I2CADDR = 0x23;
     byte BH1750_MTreg = (byte)BH1750_DEFAULT_MTREG;
     // Correction factor used to calculate lux. Typical value is 1.2 but can
     // range from 0.96 to 1.44. See the data sheet (p.2, Measurement Accuracy)

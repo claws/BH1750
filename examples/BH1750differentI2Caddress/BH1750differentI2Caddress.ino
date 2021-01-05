@@ -31,7 +31,7 @@
   If you had troubles with default value - try to change it to 0x5C.
 
 */
-BH1750 lightMeter();
+BH1750 lightMeter;
 
 void setup(){
 
