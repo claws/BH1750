@@ -26,7 +26,6 @@ script:
   - arduino --verify --board arduino:avr:uno $PWD/examples/BH1750onetime/BH1750onetime.ino
   - arduino --verify --board arduino:avr:uno $PWD/examples/BH1750autoadjust/BH1750autoadjust.ino
   - arduino --verify --board arduino:avr:uno $PWD/examples/BH1750differentI2Caddress/BH1750differentI2Caddress.ino
-  - arduino --verify --board arduino:avr:uno $PWD/examples/BH1750two_i2c/BH1750two_i2c.ino
   # esp8266
   # - arduino --verify --board esp8266:esp8266:generic $PWD/examples/BH1570test/BH1750test.ino
   # - arduino --verify --board esp8266:esp8266:generic $PWD/examples/BH1570advanced/BH1750advanced.ino
