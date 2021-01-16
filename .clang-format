@@ -1,0 +1,3 @@
+Language: Cpp
+IndentPPDirectives: AfterHash
+PointerAlignment: Left

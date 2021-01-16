@@ -6,7 +6,8 @@
   interface to the device. Configuring the I2C bus is expected to be done
   in user code. The BH1750 library doesn't do this automatically.
 
-  Datasheet: http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf
+  Datasheet:
+  http://www.elechouse.com/elechouse/images/product/Digital%20light%20Sensor/bh1750fvi-e.pdf
 
   Written by Christopher Laws, March, 2013.
 
@@ -16,9 +17,9 @@
 #define BH1750_h
 
 #if (ARDUINO >= 100)
-  #include <Arduino.h>
+#  include <Arduino.h>
 #else
-  #include <WProgram.h>
+#  include <WProgram.h>
 #endif
 
 #include "Wire.h"
