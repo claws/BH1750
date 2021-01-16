@@ -1,0 +1,68 @@
+name: checks
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Check Lint
+        uses: arduino/arduino-lint-action@v1.0.0
+        with:
+          library-manager: update
+          compliance: strict
+      - name: Check Code Format
+        run: |
+          sudo apt install clang-format
+          clang-format --version
+          bash ./ci/code-format.bash
+  compile:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arduino-platform: ["arduino:avr", "esp8266:esp8266", "esp32:esp32"]
+        # In addition to the platform we also need to define the FQBN of the
+        # boards we want to test for each platform.
+        include:
+          - arduino-platform: "arduino:avr"
+            fqbn: "arduino:avr:uno"
+            additional-urls-arg: ""
+          - arduino-platform: "esp8266:esp8266"
+            fqbn: "esp8266:esp8266:generic"
+            additional-urls-arg: "--additional-urls http://arduino.esp8266.com/stable/package_esp8266com_index.json"
+          - arduino-platform: "esp32:esp32"
+            fqbn: "esp32:esp32:esp32"
+            additional-urls-arg: "--additional-urls https://dl.espressif.com/dl/package_esp32_index.json"
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1.1.1
+      - name: Setup Python for esptool used during ESP32 compile
+        uses: actions/setup-python@v2
+        if: ${{ matrix.arduino-platform == 'esp32:esp32' }}
+        with:
+          python-version: '3.9'
+      - name: Install Python Dependencies
+        if: ${{ matrix.arduino-platform == 'esp32:esp32' }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install esptool
+      - name: Install Repo as Library
+        run: |
+          mkdir -p "$HOME/Arduino/libraries"
+          ln -s "$PWD" "$HOME/Arduino/libraries/."
+      - name: Install Arduino core and platform
+        run: |
+          arduino-cli core update-index ${{ matrix.additional-urls-arg }}
+          arduino-cli core install ${{ matrix.arduino-platform }} ${{ matrix.additional-urls-arg }}
+      - name: Compile Platform Common Sketches
+        run: |
+          arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750test/BH1750test.ino
+          arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750advanced/BH1750advanced.ino
+          arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750onetime/BH1750onetime.ino
+          arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750autoadjust/BH1750autoadjust.ino
+      - name: Compile ESP32 Platform Specific Sketches
+        if: ${{ matrix.arduino-platform == 'esp32:esp32' }}
+        run: |
+          arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750two_i2c/BH1750two_i2c.ino
