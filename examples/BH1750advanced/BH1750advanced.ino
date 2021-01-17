@@ -1,26 +1,28 @@
 /*
 
-  Advanced BH1750 library usage example
+Advanced BH1750 library usage example
 
-  This example has some comments about advanced usage features.
+This example has some comments about advanced usage features.
 
-  Connection:
+Connections
 
-    VCC -> 3V3 or 5V
-    GND -> GND
-    SCL -> SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due, on esp8266 free selectable)
-    SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due, on esp8266 free selectable)
-    ADD -> (not connected) or GND
+  - VCC to 3V3 or 5V
+  - GND to GND
+  - SCL to SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due, on
+    esp8266 free selectable)
+  - SDA to SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due, on
+    esp8266 free selectable)
+  - ADD to (not connected) or GND
 
-  ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
-  0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
-  0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
-  be 0x23 (by default).
+ADD pin is used to set sensor I2C address. If it has voltage greater or equal
+to 0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
+0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address
+will be 0x23 (by default).
 
 */
 
-#include <Wire.h>
 #include <BH1750.h>
+#include <Wire.h>
 
 /*
   BH1750 can be physically configured to use two I2C addresses:
@@ -33,7 +35,7 @@
 */
 BH1750 lightMeter(0x23);
 
-void setup(){
+void setup() {
 
   Serial.begin(9600);
 
@@ -44,9 +46,9 @@ void setup(){
   /*
 
     BH1750 has six different measurement modes. They are divided in two groups;
-    continuous and one-time measurements. In continuous mode, sensor continuously
-    measures lightness value. In one-time mode the sensor makes only one
-    measurement and then goes into Power Down mode.
+    continuous and one-time measurements. In continuous mode, sensor
+    continuously measures lightness value. In one-time mode the sensor makes
+    only one measurement and then goes into Power Down mode.
 
     Each mode, has three different precisions:
 
@@ -76,13 +78,10 @@ void setup(){
   // begin returns a boolean that can be used to detect setup problems.
   if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE)) {
     Serial.println(F("BH1750 Advanced begin"));
-  }
-  else {
+  } else {
     Serial.println(F("Error initialising BH1750"));
   }
-
 }
-
 
 void loop() {
   if (lightMeter.measurementReady()) {
@@ -91,5 +90,4 @@ void loop() {
     Serial.print(lux);
     Serial.println(" lx");
   }
-
 }

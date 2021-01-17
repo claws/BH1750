@@ -1,31 +1,31 @@
 /*
 
-  Example of BH1750 library usage.
+Example of BH1750 library usage.
 
-  This example initialises two BH1750 objects using different TwoWire
-  instances (Wire and Wire1) and then makes a light level reading every second.
-  This is the case for boards such as the ESP8266 and ESP32
+This example initialises two BH1750 objects using different TwoWire
+instances (Wire and Wire1) and then makes a light level reading every second.
+This is the case for boards such as the ESP8266 and ESP32
 
-  Connection:
+Connections:
 
-    BH1750 A:
-      VCC -> 3V3 or 5V
-      GND -> GND
-      SCL -> SCL (19 in this example)
-      SDA -> SDA (18 in this example)
-      ADD -> (not connected) or GND
+  BH1750 A:
+    VCC -> 3V3 or 5V
+    GND -> GND
+    SCL -> SCL (19 in this example)
+    SDA -> SDA (18 in this example)
+    ADD -> (not connected) or GND
 
-    BH1750 B:
-      VCC -> 3V3 or 5V
-      GND -> GND
-      SCL -> SCL (22 in this example)
-      SDA -> SDA (21 in this example)
-      ADD -> (not connected) or GND
+  BH1750 B:
+    VCC -> 3V3 or 5V
+    GND -> GND
+    SCL -> SCL (22 in this example)
+    SDA -> SDA (21 in this example)
+    ADD -> (not connected) or GND
 
-  ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
-  0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
-  0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
-  be 0x23 (by default).
+ADD pin is used to set sensor I2C address. If it has voltage greater or equal
+to 0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
+0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address
+will be 0x23 (by default).
 
 */
 
@@ -50,9 +50,13 @@ int error_counter_2_b = 0;
 
 void loop() {
   float light_level_a;
-  if (bh1750_a.measurementReady()) { light_level_a = bh1750_a.readLightLevel(); }
-  float light_level_b; 
-  if (bh1750_b.measurementReady()) { light_level_b = bh1750_b.readLightLevel(); }
+  if (bh1750_a.measurementReady()) {
+    light_level_a = bh1750_a.readLightLevel();
+  }
+  float light_level_b;
+  if (bh1750_b.measurementReady()) {
+    light_level_b = bh1750_b.readLightLevel();
+  }
 
   if (lround(light_level_a) == -1) {
     error_counter_1_a++;
