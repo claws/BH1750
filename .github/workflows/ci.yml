@@ -43,6 +43,13 @@ jobs:
         if: ${{ matrix.arduino-platform == 'esp32:esp32' }}
         with:
           python-version: '3.9'
+      - name: Setup cache for Python packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
       - name: Install Python Dependencies
         if: ${{ matrix.arduino-platform == 'esp32:esp32' }}
         run: |
