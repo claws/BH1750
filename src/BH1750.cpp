@@ -259,23 +259,25 @@ float BH1750::readLightLevel() {
 
   switch (BH1750_MODE) {
 
-    case BH1750::ONE_TIME_LOW_RES_MODE:
-      // Send mode to sensor
-      I2C->beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)BH1750_MODE);
-      I2C->endTransmission();
-      maxWait ? _delay_ms(24 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) : _delay_ms(16 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-      break;
-    case BH1750::ONE_TIME_HIGH_RES_MODE:
-    case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-      // Send mode to sensor
-      I2C->beginTransmission(BH1750_I2CADDR);
-      __wire_write((uint8_t)BH1750_MODE);
-      I2C->endTransmission();
-      maxWait ? _delay_ms(180 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG) :_delay_ms(120 * BH1750_MTreg/(byte)BH1750_DEFAULT_MTREG);
-      break;
-    default:
-      break;
+  case BH1750::ONE_TIME_LOW_RES_MODE:
+    // Send mode to sensor
+    I2C->beginTransmission(BH1750_I2CADDR);
+    __wire_write((uint8_t)BH1750_MODE);
+    I2C->endTransmission();
+    maxWait ? _delay_ms(24 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG)
+            : _delay_ms(16 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG);
+    break;
+  case BH1750::ONE_TIME_HIGH_RES_MODE:
+  case BH1750::ONE_TIME_HIGH_RES_MODE_2:
+    // Send mode to sensor
+    I2C->beginTransmission(BH1750_I2CADDR);
+    __wire_write((uint8_t)BH1750_MODE);
+    I2C->endTransmission();
+    maxWait ? _delay_ms(180 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG)
+            : _delay_ms(120 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG);
+    break;
+  default:
+    break;
   }
 
   // Read two bytes from the sensor, which are low and high parts of the sensor
