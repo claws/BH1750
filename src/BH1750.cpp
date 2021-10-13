@@ -247,39 +247,6 @@ float BH1750::readLightLevel() {
   // Measurement result will be stored here
   float level = -1.0;
 
-  // Wait for measurement to be taken.
-  // Measurements have a maximum measurement time and a typical measurement
-  // time. The maxWait argument determines which measurement wait time is
-  // used when a one-time mode is being used. The typical (shorter)
-  // measurement time is used by default and if maxWait is set to True then
-  // the maximum measurement time will be used. See data sheet pages 2, 5
-  // and 7 for more details.
-  // A continuous mode measurement can be read immediately after re-sending
-  // the mode command.
-
-  switch (BH1750_MODE) {
-
-  case BH1750::ONE_TIME_LOW_RES_MODE:
-    // Send mode to sensor
-    I2C->beginTransmission(BH1750_I2CADDR);
-    __wire_write((uint8_t)BH1750_MODE);
-    I2C->endTransmission();
-    maxWait ? _delay_ms(24 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG)
-            : _delay_ms(16 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG);
-    break;
-  case BH1750::ONE_TIME_HIGH_RES_MODE:
-  case BH1750::ONE_TIME_HIGH_RES_MODE_2:
-    // Send mode to sensor
-    I2C->beginTransmission(BH1750_I2CADDR);
-    __wire_write((uint8_t)BH1750_MODE);
-    I2C->endTransmission();
-    maxWait ? _delay_ms(180 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG)
-            : _delay_ms(120 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG);
-    break;
-  default:
-    break;
-  }
-
   // Read two bytes from the sensor, which are low and high parts of the sensor
   // value
   if (2 == I2C->requestFrom((int)BH1750_I2CADDR, (int)2)) {
