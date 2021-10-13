@@ -43,14 +43,21 @@
 
 /**
  * Constructor
+ * @params addr Sensor address (0x76 or 0x72, see datasheet)
+ *
+ * On most sensor boards, it was 0x76
  */
-BH1750::BH1750() {
+BH1750::BH1750(byte addr) {
+
+  BH1750_I2CADDR = addr;
+  // Allows user to change TwoWire instance
+  I2C = &Wire;
 }
 
 /**
  * Configure sensor
  * @param mode Measurement mode
- * @param addr Address of the sensor (0x23 or 0x5C, see datasheet)
+ * @param addr Address of the sensor
  * @param i2c TwoWire instance connected to I2C bus
  */
 bool BH1750::begin(Mode mode, byte addr, TwoWire* i2c) {

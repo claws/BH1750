@@ -8,19 +8,19 @@
 
     VCC -> 3V3 or 5V
     GND -> GND
-    SCL -> SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due, on esp8266 free selectable)
-    SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on Mega and Due, on esp8266 free selectable)
-    ADD -> VCC
+    SCL -> SCL (A5 on Arduino Uno, Leonardo, etc or 21 on Mega and Due, on
+  esp8266 free selectable) SDA -> SDA (A4 on Arduino Uno, Leonardo, etc or 20 on
+  Mega and Due, on esp8266 free selectable) ADD -> VCC
 
-  ADD pin is used to set sensor I2C address. If it has voltage greater or equal to
-  0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
-  0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address will
-  be 0x23 (by default).
+  ADD pin is used to set sensor I2C address. If it has voltage greater or equal
+  to 0.7VCC voltage (e.g. you've connected it to VCC) the sensor address will be
+  0x5C. In other case (if ADD voltage less than 0.7 * VCC) the sensor address
+  will be 0x23 (by default).
 
 */
 
-#include <Wire.h>
 #include <BH1750.h>
+#include <Wire.h>
 
 /*
   BH1750 can be physically configured to use two I2C addresses:
@@ -33,7 +33,7 @@
 */
 BH1750 lightMeter;
 
-void setup(){
+void setup() {
 
   Serial.begin(9600);
 
@@ -44,13 +44,10 @@ void setup(){
   // begin returns a boolean that can be used to detect setup problems.
   if (lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE, 0x5c)) {
     Serial.println(F("BH1750 different I2C address begin"));
-  }
-  else {
+  } else {
     Serial.println(F("Error initialising BH1750"));
   }
-
 }
-
 
 void loop() {
 
@@ -59,5 +56,4 @@ void loop() {
   Serial.print(lux);
   Serial.println(" lx");
   delay(1000);
-
 }
