@@ -138,13 +138,13 @@ bool BH1750::configure(Mode mode) {
 /**
  * Configure BH1750 MTreg value
  * MT reg = Measurement Time register
- * @param MTreg a value between 32 and 254. Default: 69
+ * @param MTreg a value between 31 and 254. Default: 69
  * @return bool true if MTReg successful set
  * 		false if MTreg not changed or parameter out of range
  */
 bool BH1750::setMTreg(byte MTreg) {
   // Bug: lowest value seems to be 32!
-  if (MTreg <= 31 || MTreg > 254) {
+  if (MTreg < BH1750_MTREG_MIN || MTreg > BH1750_MTREG_MAX) {
     Serial.println(F("[BH1750] ERROR: MTreg out of range"));
     return false;
   }
