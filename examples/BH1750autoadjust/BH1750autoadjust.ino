@@ -9,8 +9,21 @@ After the measurement the MTreg value is changed according to the result:
 lux > 40000 ==> MTreg =  32
 lux < 40000 ==> MTreg =  69  (default)
 lux <    10 ==> MTreg = 138
-Remember to test your specific sensor! Maybe the MTreg value range from 32
+Remember to test your specific sensor! Maybe the MTreg value range from 31
 up to 254 is not applicable to your unit.
+
+A calculated theoretical example of the absolute minimum and maximum lx values:
+  At CONTINUOUS_HIGH_RES_MODE and ONE_TIME_HIGH_RES_MODE,
+  with BH1750_MTREG_MIN, BH1750_DEFAULT_MTREG and BH1750_MTREG_MAX:
+    setMTreg( 31) ==> min.: 1.85 lx, max.: 121556.85 lx
+    setMTreg( 69) ==> min.: 0.83 lx, max.:  54612.50 lx
+    setMTreg(254) ==> min.: 0.23 lx, max.:  14835.68 lx
+
+  At CONTINUOUS_HIGH_RES_MODE_2 and ONE_TIME_HIGH_RES_MODE_2,
+  with BH1750_MTREG_MIN, BH1750_DEFAULT_MTREG and BH1750_MTREG_MAX:
+    setMTreg( 31) ==> min.: 0.93 lx, max.: 60778.43 lx
+    setMTreg( 69) ==> min.: 0.42 lx, max.: 27306.25 lx
+    setMTreg(254) ==> min.: 0.11 lx, max.:  7417.84 lx
 
 Connections
 
