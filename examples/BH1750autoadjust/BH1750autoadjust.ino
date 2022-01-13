@@ -12,7 +12,7 @@ lux <    10 ==> MTreg = 138
 Remember to test your specific sensor! Maybe the MTreg value range from 31
 up to 254 is not applicable to your unit.
 
-A calculated theoretical example of the absolute minimum and maximum lx values:
+A calculated theoretical example of the minimum resolution and maximum lx values:
   At CONTINUOUS_HIGH_RES_MODE and ONE_TIME_HIGH_RES_MODE,
   with BH1750_MTREG_MIN, BH1750_DEFAULT_MTREG and BH1750_MTREG_MAX:
     setMTreg( 31) ==> min.: 1.85 lx, max.: 121556.85 lx
