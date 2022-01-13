@@ -143,7 +143,6 @@ bool BH1750::configure(Mode mode) {
  * 		false if MTreg not changed or parameter out of range
  */
 bool BH1750::setMTreg(byte MTreg) {
-  // Bug: lowest value seems to be 32!
   if (MTreg < BH1750_MTREG_MIN || MTreg > BH1750_MTREG_MAX) {
     Serial.println(F("[BH1750] ERROR: MTreg out of range"));
     return false;
