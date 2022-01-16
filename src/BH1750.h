@@ -38,6 +38,8 @@
 
 // Default MTreg value
 #define BH1750_DEFAULT_MTREG 69
+#define BH1750_MTREG_MIN 31
+#define BH1750_MTREG_MAX 254
 
 class BH1750 {
 

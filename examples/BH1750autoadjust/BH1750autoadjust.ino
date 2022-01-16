@@ -9,7 +9,7 @@ After the measurement the MTreg value is changed according to the result:
 lux > 40000 ==> MTreg =  32
 lux < 40000 ==> MTreg =  69  (default)
 lux <    10 ==> MTreg = 138
-Remember to test your specific sensor! Maybe the MTreg value range from 32
+Remember to test your specific sensor! Maybe the MTreg value range from 31
 up to 254 is not applicable to your unit.
 
 Connections
