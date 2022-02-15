@@ -104,8 +104,11 @@ bool BH1750::configure(Mode mode) {
     break;
 
   default:
-    // Invalid measurement mode
+    // Print error message if error debug enabled
+    // SELECTED INVALID MEASURE MODE
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: Invalid mode"));
+    #endif
     break;
   }
 
@@ -115,20 +118,40 @@ bool BH1750::configure(Mode mode) {
     BH1750_MODE = mode;
     lastReadTimestamp = millis();
     return true;
-  case 1: // too long for transmit buffer
+  case 1:
+    // Print error message if error debug enabled
+    // MESSAGE IS TOO LONG FOR TRANSMIT BUFFER
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
+    #endif
     break;
-  case 2: // received NACK on transmit of address
+  case 2:
+    // Print error message if error debug enabled
+    // RECEIVED NACK ON TRANSMIT OF ADDRESS
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: received NACK on transmit of address"));
+    #endif
     break;
-  case 3: // received NACK on transmit of data
+  case 3:
+    // Print error message if error debug enabled
+    // RECEIVED NACK ON TRANSMIT OF DATA
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: received NACK on transmit of data"));
+    #endif
     break;
-  case 4: // other error
+  case 4:
+    // Print error message if error debug enabled
+    // OTHER WIRE BUS ERROR
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: other error"));
+    #endif
     break;
   default:
+    // Print error message if error debug enabled
+    // UNDEFINED ERROR
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: undefined error"));
+    #endif
     break;
   }
 
@@ -144,7 +167,11 @@ bool BH1750::configure(Mode mode) {
  */
 bool BH1750::setMTreg(byte MTreg) {
   if (MTreg < BH1750_MTREG_MIN || MTreg > BH1750_MTREG_MAX) {
+    // Print error message if error debug enabled
+    // MTREG OUT OF RANGE
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: MTreg out of range"));
+    #endif
     return false;
   }
   byte ack = 5;
@@ -169,20 +196,40 @@ bool BH1750::setMTreg(byte MTreg) {
   case 0:
     BH1750_MTreg = MTreg;
     return true;
-  case 1: // too long for transmit buffer
+  case 1:
+    // Print error message if error debug enabled
+    // MESSAGE IS TOO LONG FOR TRANSMIT BUFFER
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
+    #endif
     break;
-  case 2: // received NACK on transmit of address
+  case 2:
+    // Print error message if error debug enabled
+    // RECEIVED NACK ON TRANSMIT OF ADDRESS
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: received NACK on transmit of address"));
+    #endif
     break;
-  case 3: // received NACK on transmit of data
+  case 3: 
+    // Print error message if error debug enabled
+    // RECEIVED NACK ON TRANSMIT OF DATA
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: received NACK on transmit of data"));
+    #endif
     break;
-  case 4: // other error
+  case 4:
+    // Print error message if error debug enabled
+    // OTHER WIRE BUS ERROR
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: other error"));
+    #endif
     break;
   default:
+    // Print error message if error debug enabled
+    // UNDEFINED ERROR
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] ERROR: undefined error"));
+    #endif
     break;
   }
 
@@ -239,7 +286,11 @@ bool BH1750::measurementReady(bool maxWait) {
 float BH1750::readLightLevel() {
 
   if (BH1750_MODE == UNCONFIGURED) {
+    // Print error message if error debug enabled
+    // DEVICE IS NOT CONFIGURED
+    #ifdef BH1750_DEBUG_ERROR
     Serial.println(F("[BH1750] Device is not configured!"));
+    #endif
     return -2.0;
   }
 
@@ -259,7 +310,7 @@ float BH1750::readLightLevel() {
 
   if (level != -1.0) {
 // Print raw value if debug enabled
-#ifdef BH1750_DEBUG
+#ifdef BH1750_DEBUG_VALUE
     Serial.print(F("[BH1750] Raw value: "));
     Serial.println(level);
 #endif
@@ -267,7 +318,7 @@ float BH1750::readLightLevel() {
     if (BH1750_MTreg != BH1750_DEFAULT_MTREG) {
       level *= (float)((byte)BH1750_DEFAULT_MTREG / (float)BH1750_MTreg);
 // Print MTreg factor if debug enabled
-#ifdef BH1750_DEBUG
+#ifdef BH1750_DEBUG_VALUE
       Serial.print(F("[BH1750] MTreg factor: "));
       Serial.println(
           String((float)((byte)BH1750_DEFAULT_MTREG / (float)BH1750_MTreg)));
@@ -280,8 +331,8 @@ float BH1750::readLightLevel() {
     // Convert raw value to lux
     level /= BH1750_CONV_FACTOR;
 
-// Print converted value if debug enabled
-#ifdef BH1750_DEBUG
+// Print converted value if value debug enabled
+#ifdef BH1750_DEBUG_VALUE
     Serial.print(F("[BH1750] Converted float value: "));
     Serial.println(level);
 #endif
