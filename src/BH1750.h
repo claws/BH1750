@@ -24,8 +24,10 @@
 
 #include "Wire.h"
 
-// Uncomment, to enable debug messages
-// #define BH1750_DEBUG
+// Uncomment, to enable measured values debug messages
+// #define BH1750_DEBUG_VALUE
+// Uncomment, to enable error messages
+// #define BH1750_DEBUG_ERROR
 
 // No active state
 #define BH1750_POWER_DOWN 0x00
