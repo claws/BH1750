@@ -81,7 +81,7 @@ bool BH1750::begin(Mode mode, byte addr, TwoWire* i2c) {
  */
 bool BH1750::configure(Mode mode) {
 
-  // default transmission result to a value out of normal range
+  // Default transmission result to a value out of normal range
   byte ack = 5;
 
   // Check measurement mode is valid
@@ -104,8 +104,7 @@ bool BH1750::configure(Mode mode) {
     break;
 
   default:
-    // Print error message if error debug enabled
-    // SELECTED INVALID MEASURE MODE
+    // Selected invalid measure mode
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_INVALID_MODE);
     #endif
@@ -119,36 +118,31 @@ bool BH1750::configure(Mode mode) {
     lastReadTimestamp = millis();
     return true;
   case 1:
-    // Print error message if error debug enabled
-    // MESSAGE IS TOO LONG FOR TRANSMIT BUFFER
+    // Message is too long for transmit buffer
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_BUFFER_OVERFLOW);
     #endif
     break;
   case 2:
-    // Print error message if error debug enabled
-    // RECEIVED NACK ON TRANSMIT OF ADDRESS
+    // Received NACK on transmit of address
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_ADDRESS_NACK);
     #endif
     break;
   case 3:
-    // Print error message if error debug enabled
-    // RECEIVED NACK ON TRANSMIT OF DATA
+    // Received NACK on transmit of data
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_DATA_NACK);
     #endif
     break;
   case 4:
-    // Print error message if error debug enabled
-    // OTHER WIRE BUS ERROR
+    // Other Wire bus error
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_OTHER_ERROR);
     #endif
     break;
   default:
-    // Print error message if error debug enabled
-    // UNDEFINED ERROR
+    // Undefined error
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_UNDEFINED_ERROR);
     #endif
@@ -167,8 +161,7 @@ bool BH1750::configure(Mode mode) {
  */
 bool BH1750::setMTreg(byte MTreg) {
   if (MTreg < BH1750_MTREG_MIN || MTreg > BH1750_MTREG_MAX) {
-    // Print error message if error debug enabled
-    // MTREG OUT OF RANGE
+    // MTreg out of range
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_MTREG_OUT_OF_RANGE);
     #endif
@@ -197,35 +190,30 @@ bool BH1750::setMTreg(byte MTreg) {
     BH1750_MTreg = MTreg;
     return true;
   case 1:
-    // Print error message if error debug enabled
     // MESSAGE IS TOO LONG FOR TRANSMIT BUFFER
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_BUFFER_OVERFLOW);
     #endif
     break;
   case 2:
-    // Print error message if error debug enabled
     // RECEIVED NACK ON TRANSMIT OF ADDRESS
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_ADDRESS_NACK);
     #endif
     break;
   case 3: 
-    // Print error message if error debug enabled
     // RECEIVED NACK ON TRANSMIT OF DATA
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_DATA_NACK);
     #endif
     break;
   case 4:
-    // Print error message if error debug enabled
     // OTHER WIRE BUS ERROR
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_OTHER_ERROR);
     #endif
     break;
   default:
-    // Print error message if error debug enabled
     // UNDEFINED ERROR
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_UNDEFINED_ERROR);
@@ -286,7 +274,6 @@ bool BH1750::measurementReady(bool maxWait) {
 float BH1750::readLightLevel() {
 
   if (BH1750_MODE == UNCONFIGURED) {
-    // Print error message if error debug enabled
     // DEVICE IS NOT CONFIGURED
     #ifdef BH1750_DEBUG_ERRORS
       BH1750_LOG(BH1750_SENSOR_UNCONFIGURED);
@@ -309,14 +296,14 @@ float BH1750::readLightLevel() {
   lastReadTimestamp = millis();
 
   if (level != -1.0) {
-    // Print raw value if debug enabled
+    // Print raw value if value debug enabled
     #ifdef BH1750_DEBUG_VALUES
       BH1750_LOG(BH1750_RAW_VALUE_FORMAT, level);
     #endif
 
     if (BH1750_MTreg != BH1750_DEFAULT_MTREG) {
       level *= (float)((byte)BH1750_DEFAULT_MTREG / (float)BH1750_MTreg);
-      // Print MTreg factor if debug enabled
+      // Print MTreg factor if value debug enabled
       #ifdef BH1750_DEBUG_VALUES
         BH1750_LOG(BH1750_MTREG_FACTOR_FORMAT, (float)((byte)BH1750_DEFAULT_MTREG / (float)BH1750_MTreg));
       #endif
