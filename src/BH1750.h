@@ -64,15 +64,15 @@ public:
 
   BH1750(byte addr = 0x23);
   bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = 0x23,
-	     TwoWire* i2c = nullptr);
+            TwoWire* i2c = nullptr);
   bool configure(Mode mode);
   bool setMTreg(byte MTreg);
   bool measurementReady(bool maxWait = false);
   float readLightLevel();
 
   /* Unified Sensor API Functions */
-  bool getEvent(sensors_event_t *);
-  void getSensor(sensor_t *);
+  bool getEvent(sensors_event_t* event);
+  void getSensor(sensor_t* sensor);
 
 private:
   byte BH1750_I2CADDR;

@@ -292,7 +292,7 @@ float BH1750::readLightLevel() {
 
 
 
-bool BH1750::getEvent(sensors_event_t *event) {
+bool BH1750::getEvent(sensors_event_t* event) {
   /* Clear the event */
   memset(event, 0, sizeof(sensors_event_t));
 
@@ -311,7 +311,7 @@ bool BH1750::getEvent(sensors_event_t *event) {
   return true;
 }
 
-void BH1750::getSensor(sensor_t *sensor) {
+void BH1750::getSensor(sensor_t* sensor) {
   /* Clear the sensor_t object */
   memset(sensor, 0, sizeof(sensor_t));
 
@@ -326,4 +326,3 @@ void BH1750::getSensor(sensor_t *sensor) {
   sensor->min_value = 1.0;
   sensor->resolution = 1.0;
 }
-
