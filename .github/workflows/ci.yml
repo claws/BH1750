@@ -21,6 +21,9 @@ jobs:
     strategy:
       matrix:
         arduino-platform: ["arduino:avr", "esp8266:esp8266", "esp32:esp32"]
+        libraries: |
+          - name: Adafruit_Sensor
+
         # In addition to the platform we also need to define the FQBN of the
         # boards we want to test for each platform.
         include:
