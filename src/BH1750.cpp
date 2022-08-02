@@ -290,15 +290,13 @@ float BH1750::readLightLevel() {
   return level;
 }
 
-
-
 bool BH1750::getEvent(sensors_event_t* event) {
   /* Clear the event */
   memset(event, 0, sizeof(sensors_event_t));
 
-  event->version   = sizeof(sensors_event_t);
+  event->version = sizeof(sensors_event_t);
   event->sensor_id = 0;
-  event->type      = SENSOR_TYPE_LIGHT;
+  event->type = SENSOR_TYPE_LIGHT;
   event->timestamp = millis();
   while (!measurementReady(true)) {
     yield();
