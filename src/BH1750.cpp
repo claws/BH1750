@@ -300,7 +300,10 @@ bool BH1750::getEvent(sensors_event_t *event) {
   event->sensor_id = 0;
   event->type      = SENSOR_TYPE_LIGHT;
   event->timestamp = millis();
-  event->light     = readLightLevel();
+  while (!measurementReady(true)) {
+    yield();
+  }
+  event->light = readLightLevel();
 
   if (event->light < 0.0) {
     return false;
