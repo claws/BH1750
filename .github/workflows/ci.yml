@@ -18,11 +18,10 @@ jobs:
           bash ./ci/code-format.bash
   compile:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         arduino-platform: ["arduino:avr", "esp8266:esp8266", "esp32:esp32"]
-        libraries: |
-          - name: Adafruit_Sensor
 
         # In addition to the platform we also need to define the FQBN of the
         # boards we want to test for each platform.
@@ -60,6 +59,9 @@ jobs:
           arduino-cli core update-index ${{ matrix.additional-urls-arg }}
           arduino-cli core install ${{ matrix.arduino-platform }} ${{ matrix.additional-urls-arg }}
       - name: Compile Platform Common Sketches
+        libraries: |
+          - name: Adafruit_Sensor
+
         run: |
           arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750test/BH1750test.ino
           arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750advanced/BH1750advanced.ino
