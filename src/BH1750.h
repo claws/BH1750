@@ -64,7 +64,7 @@ public:
 
   BH1750(byte addr = 0x23);
   bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = 0x23,
-            TwoWire* i2c = nullptr);
+             TwoWire* i2c = nullptr);
   bool configure(Mode mode);
   bool setMTreg(byte MTreg);
   bool measurementReady(bool maxWait = false);
