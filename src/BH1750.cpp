@@ -289,3 +289,38 @@ float BH1750::readLightLevel() {
 
   return level;
 }
+
+
+
+bool BH1750::getEvent(sensors_event_t *event) {
+  /* Clear the event */
+  memset(event, 0, sizeof(sensors_event_t));
+
+  event->version   = sizeof(sensors_event_t);
+  event->sensor_id = 0;
+  event->type      = SENSOR_TYPE_LIGHT;
+  event->timestamp = millis();
+  event->light     = readLightLevel();
+
+  if (event->light < 0.0) {
+    return false;
+  }
+  return true;
+}
+
+void BH1750::getSensor(sensor_t *sensor) {
+  /* Clear the sensor_t object */
+  memset(sensor, 0, sizeof(sensor_t));
+
+  /* Insert the sensor name in the fixed length char array (char name[12];) */
+  strncpy(sensor->name, "BH1750", sizeof(sensor->name) - 1);
+  sensor->name[sizeof(sensor->name) - 1] = 0;
+  sensor->version = 1;
+  sensor->sensor_id = 0;
+  sensor->type = SENSOR_TYPE_LIGHT;
+  sensor->min_delay = 0;
+  sensor->max_value = 54612.5; /* depends on mode ... BH1750_MODE */
+  sensor->min_value = 1.0;
+  sensor->resolution = 1.0;
+}
+

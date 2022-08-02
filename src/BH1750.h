@@ -22,6 +22,7 @@
 #  include <WProgram.h>
 #endif
 
+#include <Adafruit_Sensor.h>
 #include "Wire.h"
 
 // Uncomment, to enable debug messages
@@ -41,7 +42,7 @@
 #define BH1750_MTREG_MIN 31
 #define BH1750_MTREG_MAX 254
 
-class BH1750 {
+class BH1750 : public Adafruit_Sensor {
 
 public:
   enum Mode {
@@ -63,11 +64,15 @@ public:
 
   BH1750(byte addr = 0x23);
   bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = 0x23,
-             TwoWire* i2c = nullptr);
+	     TwoWire* i2c = nullptr);
   bool configure(Mode mode);
   bool setMTreg(byte MTreg);
   bool measurementReady(bool maxWait = false);
   float readLightLevel();
+
+  /* Unified Sensor API Functions */
+  bool getEvent(sensors_event_t *);
+  void getSensor(sensor_t *);
 
 private:
   byte BH1750_I2CADDR;
