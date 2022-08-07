@@ -56,6 +56,7 @@ jobs:
         run: |
           arduino-cli core update-index ${{ matrix.additional-urls-arg }}
           arduino-cli core install ${{ matrix.arduino-platform }} ${{ matrix.additional-urls-arg }}
+          arduino-cli lib install 'Adafruit Unified Sensor'
       - name: Compile Platform Common Sketches
         run: |
           arduino-cli compile --fqbn ${{ matrix.fqbn }} ./examples/BH1750test/BH1750test.ino
