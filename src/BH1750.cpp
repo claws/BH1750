@@ -306,7 +306,7 @@ bool BH1750::getEvent(sensors_event_t* event) {
       return false;
     return true;
   }
-  return true;
+  return false;
 }
 
 void BH1750::getSensor(sensor_t* sensor) {
