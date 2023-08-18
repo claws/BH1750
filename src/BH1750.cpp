@@ -43,9 +43,9 @@
 
 /**
  * Constructor
- * @params addr Sensor address (0x76 or 0x72, see datasheet)
+ * @params addr Sensor address (0x23 or 0x5C, see datasheet)
  *
- * On most sensor boards, it was 0x76
+ * On most sensor boards, it was 0x23
  */
 BH1750::BH1750(byte addr) {
 
