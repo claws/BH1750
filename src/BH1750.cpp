@@ -105,8 +105,11 @@ bool BH1750::configure(Mode mode) {
 
   default:
     // Invalid measurement mode
+#ifdef BH1750_DEBUG
     Serial.println(F("[BH1750] ERROR: Invalid mode"));
-    break;
+#endif
+    // out of range input, safe to return early
+    return false;
   }
 
   // Check result code
@@ -115,6 +118,7 @@ bool BH1750::configure(Mode mode) {
     BH1750_MODE = mode;
     lastReadTimestamp = millis();
     return true;
+#ifdef BH1750_DEBUG
   case 1: // too long for transmit buffer
     Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
     break;
@@ -130,6 +134,7 @@ bool BH1750::configure(Mode mode) {
   default:
     Serial.println(F("[BH1750] ERROR: undefined error"));
     break;
+#endif
   }
 
   return false;
@@ -144,7 +149,9 @@ bool BH1750::configure(Mode mode) {
  */
 bool BH1750::setMTreg(byte MTreg) {
   if (MTreg < BH1750_MTREG_MIN || MTreg > BH1750_MTREG_MAX) {
+#ifdef BH1750_DEBUG
     Serial.println(F("[BH1750] ERROR: MTreg out of range"));
+#endif
     return false;
   }
   byte ack = 5;
@@ -169,6 +176,7 @@ bool BH1750::setMTreg(byte MTreg) {
   case 0:
     BH1750_MTreg = MTreg;
     return true;
+#ifdef BH1750_DEBUG
   case 1: // too long for transmit buffer
     Serial.println(F("[BH1750] ERROR: too long for transmit buffer"));
     break;
@@ -184,6 +192,7 @@ bool BH1750::setMTreg(byte MTreg) {
   default:
     Serial.println(F("[BH1750] ERROR: undefined error"));
     break;
+#endif
   }
 
   return false;
@@ -239,7 +248,9 @@ bool BH1750::measurementReady(bool maxWait) {
 float BH1750::readLightLevel() {
 
   if (BH1750_MODE == UNCONFIGURED) {
+#ifdef BH1750_DEBUG
     Serial.println(F("[BH1750] Device is not configured!"));
+#endif
     return -2.0;
   }
 
